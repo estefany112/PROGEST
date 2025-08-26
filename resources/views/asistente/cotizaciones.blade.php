@@ -1,4 +1,5 @@
 
+@extends('layouts.app')
 
 @section('content')
 <div class="max-w-5xl mx-auto py-10 px-6">
@@ -25,8 +26,10 @@
                         <td class="px-4 py-2">
                             <span class="{{ $cotizacion->estado_clase }} font-bold text-base">{{ $cotizacion->estado_texto }}</span>
                         </td>
-                        <td class="px-4 py-2 text-center">
-                            <a href="{{ route('cotizaciones.pdf', $cotizacion) }}" class="bg-green-600 hover:bg-green-800 text-white font-bold py-1 px-3 rounded shadow text-xs" target="_blank" download>Descargar PDF</a>
+                        <td class="px-4 py-2 text-center flex flex-col md:flex-row gap-2 justify-center items-center">
+                            <a href="{{ route('cotizaciones.pdf', $cotizacion) }}" class="bg-green-600 hover:bg-green-800 text-white font-bold py-1 px-3 rounded shadow text-xs" target="_blank" download>PDF</a>
+                            <a href="{{ route('cotizaciones.edit', $cotizacion) }}" class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-1 px-3 rounded shadow text-xs">Editar</a>
+                           
                         </td>
                     </tr>
                 @empty

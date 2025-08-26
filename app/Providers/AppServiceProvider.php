@@ -27,5 +27,10 @@ class AppServiceProvider extends ServiceProvider
         
         // Registrar políticas
         Gate::policy(Cotizacion::class, CotizacionPolicy::class);
+
+        // Forzar el parámetro correcto para resource cotizaciones
+        \Illuminate\Support\Facades\Route::resourceParameters([
+            'cotizaciones' => 'cotizacion',
+        ]);
     }
 }

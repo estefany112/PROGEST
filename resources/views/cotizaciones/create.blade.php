@@ -1,62 +1,50 @@
 
-                    <!-- Botón para regresar al dashboard debajo del formulario -->
-                    <div class="mt-8 flex justify-end">
-                        @php $user = Auth::user(); @endphp
-                        @if($user && $user->hasRole('admin') && Route::has('admin.dashboard'))
-                            <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-900">Regresar al Dashboard</a>
-                        @elseif($user && $user->hasRole('asistente') && Route::has('asistente.dashboard'))
-                            <a href="{{ route('asistente.dashboard') }}" class="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-900">Regresar al Dashboard</a>
-                        @elseif(Route::has('home'))
-                            <a href="{{ route('home') }}" class="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-900">Regresar al Inicio</a>
-                        @endif
-                    </div>
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Nueva Cotización') }}
-            </h2>
-            <div class="flex space-x-2">
-                @if(Route::has('dashboard'))
-                    <a href="{{ route('dashboard') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Dashboard</a>
-                @elseif(Route::has('home'))
-                    <a href="{{ route('home') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Inicio</a>
-                @endif
-                @if(Route::has('profile.show'))
-                    <a href="{{ route('profile.show') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ver mi perfil</a>
-                @endif
-            </div>
-        </div>
-    </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+@extends('layouts.app')
+
+@section('content')
+<div class="max-w-7xl mx-auto pt-8 pb-10 px-6">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-bold text-gray-100">Nueva Cotización</h1>
+        <div class="flex space-x-2">
+            @if(Route::has('dashboard'))
+                <a href="{{ route('dashboard') }}" class="bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded">Dashboard</a>
+            @elseif(Route::has('home'))
+                <a href="{{ route('home') }}" class="bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded">Inicio</a>
+            @endif
+            @if(Route::has('profile.show'))
+                <a href="{{ route('profile.show') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ver mi perfil</a>
+            @endif
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 text-gray-100">
                     <form action="{{ route('cotizaciones.store') }}" method="POST" id="cotizacionForm">
                         @csrf
                         
                         <!-- Datos del cliente -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
-                                <label for="cliente_nombre" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="cliente_nombre" class="block text-sm font-medium text-gray-200 mb-2">
                                     Nombre del Cliente *
                                 </label>
                                 <input type="text" id="cliente_nombre" name="cliente_nombre" 
                                        value="{{ old('cliente_nombre') }}" required
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                       class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 @error('cliente_nombre')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
                             
                             <div>
-                                <label for="cliente_nit" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="cliente_nit" class="block text-sm font-medium text-gray-200 mb-2">
                                     NIT *
                                 </label>
                                 <input type="text" id="cliente_nit" name="cliente_nit" 
                                        value="{{ old('cliente_nit') }}" required
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                       class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 @error('cliente_nit')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -64,23 +52,23 @@
                         </div>
                         
                         <div class="mb-6">
-                            <label for="cliente_direccion" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="cliente_direccion" class="block text-sm font-medium text-gray-200 mb-2">
                                 Dirección del Cliente *
                             </label>
                             <textarea id="cliente_direccion" name="cliente_direccion" rows="3" required
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('cliente_direccion') }}</textarea>
+                                      class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('cliente_direccion') }}</textarea>
                             @error('cliente_direccion')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         
                         <div class="mb-6">
-                            <label for="fecha_emision" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="fecha_emision" class="block text-sm font-medium text-gray-200 mb-2">
                                 Fecha de Emisión *
                             </label>
                             <input type="date" id="fecha_emision" name="fecha_emision" 
                                    value="{{ old('fecha_emision', date('Y-m-d')) }}" required
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                   class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             @error('fecha_emision')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -89,9 +77,9 @@
                         <!-- Items de la cotización -->
                         <div class="mb-6">
                             <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-lg font-medium text-gray-900">Items de la Cotización</h3>
+                                <h3 class="text-lg font-medium text-gray-100">Items de la Cotización</h3>
                                 <button type="button" onclick="agregarItem()" 
-                                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                        class="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded">
                                     <i class="fas fa-plus mr-2"></i>Agregar Item
                                 </button>
                             </div>
@@ -106,11 +94,11 @@
                 </div>
 
                 <!-- Detalle del Servicio -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg mb-6">
                     <div class="p-6">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Detalle del Servicio / Términos y Condiciones</h3>
+                        <h3 class="text-lg font-medium text-gray-100 mb-4">Detalle del Servicio / Términos y Condiciones</h3>
                         <textarea id="detalle_servicio" name="detalle_servicio" rows="10" 
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('detalle_servicio') }}</textarea>
+                                  class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('detalle_servicio') }}</textarea>
                         @error('detalle_servicio')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -123,19 +111,19 @@
                         <h3 class="text-lg font-medium text-gray-900">Items de la Cotización</h3>
                         
                         <!-- Totales -->
-                        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <div class="bg-gray-800 p-4 rounded-lg mb-6">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Subtotal</label>
-                                    <div class="text-lg font-semibold text-gray-900" id="subtotal">Q0.00</div>
+                                    <label class="block text-sm font-medium text-gray-200 mb-2">Subtotal</label>
+                                    <div class="text-lg font-semibold text-gray-100" id="subtotal">Q0.00</div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">IVA (12%)</label>
-                                    <div class="text-lg font-semibold text-gray-900" id="iva">Q0.00</div>
+                                    <label class="block text-sm font-medium text-gray-200 mb-2">IVA (12%)</label>
+                                    <div class="text-lg font-semibold text-gray-100" id="iva">Q0.00</div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Total</label>
-                                    <div class="text-xl font-bold text-blue-600" id="total">Q0.00</div>
+                                    <label class="block text-sm font-medium text-gray-200 mb-2">Total</label>
+                                    <div class="text-xl font-bold text-blue-400" id="total">Q0.00</div>
                                 </div>
                             </div>
                         </div>
@@ -145,12 +133,12 @@
                             
                             @if(Route::has('dashboard'))
                                 <a href="{{ route('dashboard') }}" 
-                                   class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50">
+                                   class="px-4 py-2 text-gray-300 border border-gray-700 rounded-md hover:bg-gray-700">
                                     Ir al Dashboard
                                 </a>
                             @elseif(Route::has('home'))
                                 <a href="{{ route('home') }}" 
-                                   class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50">
+                                   class="px-4 py-2 text-gray-300 border border-gray-700 rounded-md hover:bg-gray-700">
                                     Ir al Inicio
                                 </a>
                             @endif
@@ -167,38 +155,38 @@
 
     <!-- Template para items -->
     <template id="item-template">
-        <div class="item-row border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <div class="item-row border border-gray-700 rounded-lg p-4 mb-4 bg-gray-900">
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Cantidad *</label>
+                    <label class="block text-sm font-medium text-gray-200 mb-2">Cantidad *</label>
                     <input type="number" name="items[INDEX][cantidad]" min="1" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                            onchange="calcularTotalItem(this)">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Unidad *</label>
+                    <label class="block text-sm font-medium text-gray-200 mb-2">Unidad *</label>
                     <input type="text" name="items[INDEX][unidad_medida]" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                            placeholder="ej: Unidad, Kg, etc.">
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción *</label>
+                    <label class="block text-sm font-medium text-gray-200 mb-2">Descripción *</label>
                     <input type="text" name="items[INDEX][descripcion]" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                           class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Precio Unitario *</label>
+                    <label class="block text-sm font-medium text-gray-200 mb-2">Precio Unitario *</label>
                     <input type="number" name="items[INDEX][precio_unitario]" min="0" step="0.01" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                            onchange="calcularTotalItem(this)">
                 </div>
             </div>
             <div class="flex justify-between items-center mt-4">
-                <div class="text-sm font-medium text-gray-700">
-                                         Total del Item: <span class="text-blue-600 item-total">Q0.00</span>
+                <div class="text-sm font-medium text-gray-200">
+                                         Total del Item: <span class="text-blue-400 item-total">Q0.00</span>
                 </div>
                 <button type="button" onclick="eliminarItem(this)" 
-                        class="text-red-600 hover:text-red-900">
+                        class="text-red-500 hover:text-red-700">
                     <i class="fas fa-trash"></i> Eliminar
                 </button>
             </div>
@@ -258,4 +246,4 @@
             agregarItem();
         });
     </script>
-</x-app-layout>
+@endsection
