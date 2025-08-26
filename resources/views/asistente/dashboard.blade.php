@@ -6,7 +6,6 @@
     <div class="flex items-center mb-10">
         <h1 class="text-3xl font-bold text-white">Panel de {{ ucfirst($role) }}</h1>
     </div>
-
     <!-- TARJETAS DE ESTADÍSTICAS -->
     <div class="grid md:grid-cols-4 gap-6 mb-10">
         <!-- Total Usuarios -->
@@ -17,14 +16,12 @@
                     <h2 class="text-2xl font-bold text-white">{{ $totalUsuarios ?? 125 }}</h2>
                 </div>
                 <div class="bg-blue-600 text-white p-2 rounded-full">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M17 20h5V4H2v16h5m5-16v16" />
                     </svg>
                 </div>
             </div>
         </div>
-
         <!-- Cotizaciones -->
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
             <div class="flex items-center justify-between">
@@ -33,14 +30,12 @@
                     <h2 class="text-2xl font-bold text-white">{{ $totalCotizaciones ?? 78 }}</h2>
                 </div>
                 <div class="bg-green-600 text-white p-2 rounded-full">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M12 4v16m8-8H4" />
                     </svg>
                 </div>
             </div>
         </div>
-
         <!-- Pedidos -->
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
             <div class="flex items-center justify-between">
@@ -49,14 +44,12 @@
                     <h2 class="text-2xl font-bold text-white">{{ $totalPedidos ?? 42 }}</h2>
                 </div>
                 <div class="bg-yellow-500 text-white p-2 rounded-full">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M9 12h6m2 6H7a2 2 0 01-2-2V8a2 2 0 012-2h4l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2z"/>
                     </svg>
                 </div>
             </div>
         </div>
-
         <!-- Facturas -->
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
             <div class="flex items-center justify-between">
@@ -87,7 +80,7 @@
                     <h3 class="text-xl font-semibold">Cotizaciones</h3>
                 </div>
                 <p class="text-gray-400 mb-4">Ver y administrar cotizaciones realizadas.</p>
-                <a href="#" class="text-blue-400 hover:text-blue-300 font-medium">Ir a cotizaciones →</a>
+                <a href="{{ route('cotizaciones.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a cotizaciones →</a>
             </div>
 
             <!-- Usuarios -->
@@ -117,7 +110,7 @@
             </div>
         </div>
     @elseif($role === 'asistente')
-        <div class="grid md:grid-cols-3 gap-6">
+        <div class="grid md:grid-cols-4 gap-6">
             <!-- Crear cotización -->
             <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
                 <div class="flex items-center mb-2 text-white">
@@ -128,7 +121,20 @@
                     <h3 class="text-xl font-semibold">Crear cotización</h3>
                 </div>
                 <p class="text-gray-400 mb-4">Genera cotizaciones rápidamente.</p>
-                <a href="#" class="text-green-400 hover:text-green-300 font-medium">Cotizar ahora →</a>
+                <a href="{{ route('cotizaciones.create') }}" class="text-green-400 hover:text-green-300 font-medium">Cotizar ahora →</a>
+            </div>
+
+            <!-- Ver cotizaciones -->
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
+                <div class="flex items-center mb-2 text-white">
+                    <svg class="w-6 h-6 mr-2 text-blue-400" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path d="M9 14l6-6M15 14l-6-6" />
+                    </svg>
+                    <h3 class="text-xl font-semibold">Mis Cotizaciones</h3>
+                </div>
+                <p class="text-gray-400 mb-4">Ver y gestionar tus cotizaciones.</p>
+                <a href="{{ route('asistente.cotizaciones') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver cotizaciones →</a>
             </div>
 
             <!-- Ver pedidos -->
@@ -157,7 +163,9 @@
                 <a href="#" class="text-green-400 hover:text-green-300 font-medium">Subir factura →</a>
             </div>
         </div>
+
     @endif
 </div>
 @endsection
+            </div>
 

@@ -87,7 +87,44 @@
                     <h3 class="text-xl font-semibold">Cotizaciones</h3>
                 </div>
                 <p class="text-gray-400 mb-4">Ver y administrar cotizaciones realizadas.</p>
-                <a href="#" class="text-blue-400 hover:text-blue-300 font-medium">Ir a cotizaciones →</a>
+                <a href="{{ route('cotizaciones.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a cotizaciones →</a>
+    @if($role === 'admin')
+        <div class="mt-10">
+            
+            <div class="overflow-x-auto bg-gray-900 rounded-lg">
+                <table class="min-w-full divide-y divide-gray-700">
+                
+                    <tbody class="bg-gray-800 divide-y divide-gray-700">
+                        @foreach($cotizaciones ?? [] as $cotizacion)
+                            @if($cotizacion->estado === 'en_revision')
+                            <tr>
+                                <td class="px-4 py-2 text-white">{{ $cotizacion->folio }}</td>
+                                <td class="px-4 py-2 text-white">{{ $cotizacion->cliente_nombre }}</td>
+                                <td class="px-4 py-2 text-white">{{ $cotizacion->fecha_emision ? $cotizacion->fecha_emision->format('d/m/Y') : '' }}</td>
+                                <td class="px-4 py-2 text-white">Q{{ number_format($cotizacion->total, 2) }}</td>
+                                <td class="px-4 py-2">
+                                    <span class="{{ $cotizacion->estado_clase }}">{{ $cotizacion->estado_texto }}</span>
+                                </td>
+                                <td class="px-4 py-2 flex space-x-2">
+                                    <a href="{{ route('cotizaciones.show', $cotizacion) }}" class="text-blue-400 hover:text-blue-200 font-medium">Ver</a>
+                                    <form action="{{ route('cotizaciones.aprobar', $cotizacion) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-green-400 hover:text-green-200 font-medium" onclick="return confirm('¿Aprobar esta cotización?')">Aprobar</button>
+                                    </form>
+                                    <form action="{{ route('cotizaciones.rechazar', $cotizacion) }}" method="POST" class="inline">
+                                        @csrf
+                                        <input type="text" name="comentario_rechazo" placeholder="Motivo (opcional)" class="border rounded px-2 py-1 text-xs mr-1" style="width:120px;">
+                                        <button type="submit" class="text-red-400 hover:text-red-200 font-medium" onclick="return confirm('¿Rechazar esta cotización?')">Rechazar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endif
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
             </div>
 
             <!-- Usuarios -->

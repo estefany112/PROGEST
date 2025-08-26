@@ -26,5 +26,19 @@ class RolesYUsuariosSeeder extends Seeder
 
         // Asignar rol admin al usuario
         $admin->syncRoles([$adminRole]);
+
+        // Crear usuario asistente
+        $asistente = User::firstOrCreate(
+            ['email' => 'asistente@gmail.com'],
+            [
+                'name' => 'Asistente',
+                'password' => bcrypt('asistente123'),
+                'estado' => 'activo',
+                'tipo' => 'asistente',
+            ]
+        );
+
+        // Asignar rol asistente al usuario
+        $asistente->syncRoles([$asistenteRole]);
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Cotizacion;
+use App\Policies\CotizacionPolicy;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-         Blade::component('components.app-layout', 'app-layout');
+        Blade::component('components.app-layout', 'app-layout');
+        
+        // Registrar políticas
+        Gate::policy(Cotizacion::class, CotizacionPolicy::class);
     }
 }

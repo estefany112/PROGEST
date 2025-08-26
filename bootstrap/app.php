@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
         'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+        'check.user.type' => \App\Http\Middleware\CheckUserType::class,
         // aquí puedes agregar más middlewares personalizados si deseas
         ]);
     })
