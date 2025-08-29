@@ -21,11 +21,17 @@ Route::middleware(['auth'])->group(function () {
 
     // ADMIN
     Route::middleware(['role:admin'])->prefix('admin')->group(function () {
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('/dashboard',           [AdminDashboardController::class, 'index'])->name('admin.dashboard');
         Route::get('/usuarios-pendientes', [UsuarioController::class, 'pendientes'])->name('admin.usuarios.pendientes');
         Route::put('/usuarios-aprobar/{id}', [UsuarioController::class, 'aprobar'])->name('admin.usuarios.aprobar');
         Route::put('/usuarios-rechazar/{id}', [UsuarioController::class, 'rechazar'])->name('admin.usuarios.rechazar');
-    });
+
+        //CRUD USUARIOS
+        Route::get('/usuarios',            [UsuarioController::class, 'index'])->name('usuarios.index');
+        Route::get('/usuarios/{id}/edit',  [UsuarioController::class, 'edit'])->name('usuarios.edit');
+        Route::put('/usuarios/{id}',       [UsuarioController::class, 'update'])->name('usuarios.update');
+        Route::delete('/usuarios/{id}',    [UsuarioController::class, 'destroy'])->name('usuarios.destroy');
+        });
 
     // ASISTENTE
     Route::middleware(['role:asistente'])->prefix('asistente')->group(function () {
