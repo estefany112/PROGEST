@@ -12,8 +12,8 @@
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-400 uppercase">Usuarios</p>
-                    <h2 class="text-2xl font-bold text-white">{{ $totalUsuarios }}</h2>
+                    <p class="text-sm text-gray-400 uppercase">Clientes</p>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalClientes }}</h2>
                 </div>
                 <div class="bg-blue-600 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -121,7 +121,7 @@
                     <h3 class="text-xl font-semibold">Clientes</h3>
                 </div>
                 <p class="text-gray-400 mb-4">Ver y gestionar clientes.</p>
-                <a href="{{ route('asistente.cotizaciones') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver clientes →</a>
+                <a href="{{ route('clientes.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver clientes →</a>
             </div>
 
             <!-- Crear cotización -->

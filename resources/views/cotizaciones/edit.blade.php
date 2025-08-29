@@ -52,18 +52,6 @@
                         <textarea id="cliente_direccion_view" rows="2" class="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-gray-100 rounded-md" readonly></textarea>
                     </div>
                     </div>
-
-                        
-                        <div class="mb-6">
-                            <label for="cliente_direccion" class="block text-sm font-medium text-gray-200 mb-2">
-                                Dirección del Cliente *
-                            </label>
-                            <textarea id="cliente_direccion" name="cliente_direccion" rows="3" required
-                                      class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('cliente_direccion', $cotizacion->cliente_direccion) }}</textarea>
-                            @error('cliente_direccion')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
                         
                         <div class="mb-6">
                             <label for="fecha_emision" class="block text-sm font-medium text-gray-200 mb-2">

@@ -36,6 +36,8 @@ Route::middleware(['auth'])->group(function () {
     // CLIENTES
     Route::get('/clientes/lista-json', [ClienteController::class, 'listaJson'])->name('clientes.lista-json');
     Route::post('/clientes',           [ClienteController::class, 'guardar'])->name('clientes.guardar');
+    // CRUD de clientes
+    Route::resource('clientes', ClienteController::class)->except(['store']);
 
     // COTIZACIONES - Accesible para admin y asistente
     Route::middleware(['auth', 'check.user.type:admin,asistente'])->group(function () {
