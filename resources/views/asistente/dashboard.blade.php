@@ -13,7 +13,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-400 uppercase">Usuarios</p>
-                    <h2 class="text-2xl font-bold text-white">{{ $totalUsuarios ?? 125 }}</h2>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalUsuarios }}</h2>
                 </div>
                 <div class="bg-blue-600 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-400 uppercase">Cotizaciones</p>
-                    <h2 class="text-2xl font-bold text-white">{{ $totalCotizaciones ?? 78 }}</h2>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalCotizaciones }}</h2>
                 </div>
                 <div class="bg-green-600 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -111,6 +111,19 @@
         </div>
     @elseif($role === 'asistente')
         <div class="grid md:grid-cols-4 gap-6">
+            <!-- Ver Clientes -->
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
+                <div class="flex items-center mb-2 text-white">
+                    <svg class="w-6 h-6 mr-2 text-blue-400" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path d="M9 14l6-6M15 14l-6-6" />
+                    </svg>
+                    <h3 class="text-xl font-semibold">Clientes</h3>
+                </div>
+                <p class="text-gray-400 mb-4">Ver y gestionar clientes.</p>
+                <a href="{{ route('asistente.cotizaciones') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver clientes →</a>
+            </div>
+
             <!-- Crear cotización -->
             <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
                 <div class="flex items-center mb-2 text-white">

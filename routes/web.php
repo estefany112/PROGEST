@@ -6,6 +6,7 @@ use App\Http\Controllers\CotizacionController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Asistente\AsistenteDashboardController;
+use App\Http\Controllers\ClienteController;
 
 Route::get('/debug-rol', function () {
     return view('debug-rol');
@@ -32,6 +33,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cotizaciones', [\App\Http\Controllers\AsistenteCotizacionesController::class, 'index'])->name('asistente.cotizaciones');
     });
 
+    // CLIENTES
+    Route::get('/clientes/lista-json', [ClienteController::class, 'listaJson'])->name('clientes.lista-json');
+    Route::post('/clientes',           [ClienteController::class, 'guardar'])->name('clientes.guardar');
+
     // COTIZACIONES - Accesible para admin y asistente
     Route::middleware(['auth', 'check.user.type:admin,asistente'])->group(function () {
         Route::resource('cotizaciones', CotizacionController::class);
@@ -47,6 +52,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+
 });
 
 Route::get('/acceso-denegado', function () {

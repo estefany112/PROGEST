@@ -15,31 +15,44 @@
                         @method('PUT')
                         
                         <!-- Datos del cliente -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label for="cliente_nombre" class="block text-sm font-medium text-gray-200 mb-2">
-                                    Nombre del Cliente *
-                                </label>
-                                <input type="text" id="cliente_nombre" name="cliente_nombre" 
-                                       value="{{ old('cliente_nombre', $cotizacion->cliente_nombre) }}" required
-                                       class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                @error('cliente_nombre')
-                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            
-                            <div>
-                                <label for="cliente_nit" class="block text-sm font-medium text-gray-200 mb-2">
-                                    NIT *
-                                </label>
-                                <input type="text" id="cliente_nit" name="cliente_nit" 
-                                       value="{{ old('cliente_nit', $cotizacion->cliente_nit) }}" required
-                                       class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                @error('cliente_nit')
-                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-200 mb-2">Empresa (cliente) *</label>
+                            <select id="cliente_select" name="cliente_id"
+                                    class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required>
+                            <option value="">-- Selecciona cliente --</option>
+                            {{-- se cargará por JS --}}
+                            </select>
+                            @error('cliente_id')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
+
+                        <div class="flex items-end">
+                            <button type="button" id="btnNuevoCliente"
+                                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded w-full">
+                            + Nuevo cliente
+                            </button>
+                        </div>
+                        </div>
+
+                    {{-- Snapshot solo lectura (SIN name) --}}
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200 mb-2">Nombre</label>
+                        <input id="cliente_nombre_view" class="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-gray-100 rounded-md" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200 mb-2">NIT</label>
+                        <input id="cliente_nit_view" class="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-gray-100 rounded-md" readonly>
+                    </div>
+                    <div class="md:col-span-1 md:col-start-1 md:col-end-4">
+                        <label class="block text-sm font-medium text-gray-200 mb-2">Dirección</label>
+                        <textarea id="cliente_direccion_view" rows="2" class="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-gray-100 rounded-md" readonly></textarea>
+                    </div>
+                    </div>
+
                         
                         <div class="mb-6">
                             <label for="cliente_direccion" class="block text-sm font-medium text-gray-200 mb-2">
@@ -203,56 +216,50 @@
     </template>
 
     <script>
-        let itemIndex = {{ count($cotizacion->items) }};
+    // ====== Clientes (select + snapshot) ======
+    const sel = document.getElementById('cliente_select');
+    const vNom = document.getElementById('cliente_nombre_view');
+    const vNit = document.getElementById('cliente_nit_view');
+    const vDir = document.getElementById('cliente_direccion_view');
 
-        function agregarItem() {
-            const container = document.getElementById('items-container');
-            const template = document.getElementById('item-template');
-            const itemHtml = template.innerHTML.replace(/INDEX/g, itemIndex);
-            
-            const itemDiv = document.createElement('div');
-            itemDiv.innerHTML = itemHtml;
-            container.appendChild(itemDiv);
-            
-            itemIndex++;
-        }
+    async function cargarClientesYSeleccionar() {
+        try {
+        const res = await fetch('{{ route('clientes.lista-json') }}', { headers: { 'Accept': 'application/json' }});
+        const list = await res.json();
 
-        function eliminarItem(button) {
-            button.closest('.item-row').remove();
-            calcularTotales();
-        }
-
-        function calcularTotalItem(input) {
-            const row = input.closest('.item-row');
-            const cantidad = row.querySelector('input[name*="[cantidad]"]').value || 0;
-            const precio = row.querySelector('input[name*="[precio_unitario]"]').value || 0;
-            const total = cantidad * precio;
-            
-            row.querySelector('.item-total').textContent = `Q${total.toFixed(2)}`;
-            calcularTotales();
-        }
-
-        function calcularTotales() {
-            let subtotal = 0;
-            const items = document.querySelectorAll('.item-row');
-            
-            items.forEach(item => {
-                const cantidad = item.querySelector('input[name*="[cantidad]"]').value || 0;
-                const precio = item.querySelector('input[name*="[precio_unitario]"]').value || 0;
-                subtotal += cantidad * precio;
-            });
-            
-            const iva = subtotal * 0.12;
-            const total = subtotal + iva;
-            
-            document.getElementById('subtotal').textContent = `Q${subtotal.toFixed(2)}`;
-            document.getElementById('iva').textContent = `Q${iva.toFixed(2)}`;
-            document.getElementById('total').textContent = `Q${total.toFixed(2)}`;
-        }
-
-        // Calcular totales iniciales
-        document.addEventListener('DOMContentLoaded', function() {
-            calcularTotales();
+        sel.innerHTML = '<option value="">-- Selecciona cliente --</option>';
+        list.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.nombre;
+            opt.dataset.nit = c.nit || '';
+            opt.dataset.dir = c.direccion || '';
+            sel.appendChild(opt);
         });
-    </script>
+
+        // Selecciona el cliente actual de la cotización
+        sel.value = '{{ $cotizacion->cliente_id }}';
+        const opt = sel.selectedOptions[0];
+        if (opt) {
+            vNom.value = opt.textContent.trim();
+            vNit.value = opt.dataset.nit || '';
+            vDir.value = opt.dataset.dir || '';
+        }
+        } catch (e) {
+        console.error('No se pudo cargar clientes', e);
+        }
+    }
+
+    sel.addEventListener('change', () => {
+        const opt = sel.selectedOptions[0];
+        vNom.value = opt ? opt.textContent.trim() : '';
+        vNit.value = opt ? (opt.dataset.nit || '') : '';
+        vDir.value = opt ? (opt.dataset.dir || '') : '';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        cargarClientesYSeleccionar();
+    });
+</script>
+
 @endsection
