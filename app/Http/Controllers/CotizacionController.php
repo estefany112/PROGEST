@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Cotizacion;
 use App\Models\ItemCotizacion;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
+
 class CotizacionController extends Controller
 {
     /**
@@ -48,9 +50,7 @@ class CotizacionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'cliente_nombre' => 'required|string|max:255',
-            'cliente_direccion' => 'required|string',
-            'cliente_nit' => 'required|string|max:20',
+            'cliente_id' => ['required','exists:clientes,id'],
             'fecha_emision' => 'required|date',
             'items' => 'required|array|min:1',
             'items.*.cantidad' => 'required|integer|min:1',
@@ -62,13 +62,15 @@ class CotizacionController extends Controller
         try {
             DB::beginTransaction();
 
+            $cliente = Cliente::findOrFail($request->cliente_id);
             // Crear cotización
             $cotizacion = Cotizacion::create([
                 'folio' => Cotizacion::generarFolio(),
                 'fecha_emision' => $request->fecha_emision,
-                'cliente_nombre' => $request->cliente_nombre,
-                'cliente_direccion' => $request->cliente_direccion,
-                'cliente_nit' => $request->cliente_nit,
+                'cliente_id'       => $cliente->id,
+                'cliente_nombre' => $cliente->nombre,
+                'cliente_direccion' => $cliente->direccion,
+                'cliente_nit' => $cliente->nit,
                 'subtotal' => 0,
                 'iva' => 0,
                 'total' => 0,
@@ -133,9 +135,7 @@ class CotizacionController extends Controller
         $this->authorize('update', $cotizacion);
 
         $request->validate([
-            'cliente_nombre' => 'required|string|max:255',
-            'cliente_direccion' => 'required|string',
-            'cliente_nit' => 'required|string|max:20',
+            'cliente_id' => ['required','exists:clientes,id'],
             'fecha_emision' => 'required|date',
             'items' => 'required|array|min:1',
             'items.*.cantidad' => 'required|integer|min:1',
@@ -147,13 +147,16 @@ class CotizacionController extends Controller
         try {
             DB::beginTransaction();
 
+            $cliente = Cliente::findOrFail($request->cliente_id);
+
             // Actualizar datos de la cotización
             $cotizacion->update([
-                'fecha_emision' => $request->fecha_emision,
-                'cliente_nombre' => $request->cliente_nombre,
-                'cliente_direccion' => $request->cliente_direccion,
-                'cliente_nit' => $request->cliente_nit,
-            ]);
+            'fecha_emision'     => $request->fecha_emision,
+            'cliente_id'        => $cliente->id,
+            'cliente_nombre'    => $cliente->nombre,
+            'cliente_direccion' => $cliente->direccion,
+            'cliente_nit'       => $cliente->nit,
+          ]);
 
             // Eliminar items existentes
             $cotizacion->items()->delete();

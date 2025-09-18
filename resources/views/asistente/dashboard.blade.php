@@ -134,7 +134,7 @@
                     <h3 class="text-xl font-semibold">Mis Cotizaciones</h3>
                 </div>
                 <p class="text-gray-400 mb-4">Ver y gestionar tus cotizaciones.</p>
-                <a href="{{ route('asistente.cotizaciones') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver cotizaciones →</a>
+                <a href="{{ route('cotizaciones') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver cotizaciones →</a>
             </div>
 
             <!-- Ver pedidos -->

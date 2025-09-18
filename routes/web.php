@@ -6,6 +6,7 @@ use App\Http\Controllers\CotizacionController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Asistente\AsistenteDashboardController;
+use App\Http\Controllers\ClienteController;
 
 Route::get('/debug-rol', function () {
     return view('debug-rol');
@@ -24,15 +25,21 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/usuarios-pendientes', [UsuarioController::class, 'pendientes'])->name('admin.usuarios.pendientes');
         Route::put('/usuarios-aprobar/{id}', [UsuarioController::class, 'aprobar'])->name('admin.usuarios.aprobar');
         Route::put('/usuarios-rechazar/{id}', [UsuarioController::class, 'rechazar'])->name('admin.usuarios.rechazar');
+
+         //CRUD USUARIOS
+        Route::get('/usuarios',            [UsuarioController::class, 'index'])->name('usuarios.index');
+        Route::get('/usuarios/{id}/edit',  [UsuarioController::class, 'edit'])->name('usuarios.edit');
+        Route::put('/usuarios/{id}',       [UsuarioController::class, 'update'])->name('usuarios.update');
+        Route::delete('/usuarios/{id}',    [UsuarioController::class, 'destroy'])->name('usuarios.destroy');
     });
 
     // ASISTENTE
     Route::middleware(['role:asistente'])->prefix('asistente')->group(function () {
     Route::get('/dashboard', [AsistenteDashboardController::class, 'index'])->name('asistente.dashboard');
-    Route::get('/cotizaciones', [\App\Http\Controllers\AsistenteCotizacionesController::class, 'index'])->name('asistente.cotizaciones');
+    Route::get('/cotizaciones', [\App\Http\Controllers\AsistenteCotizacionesController::class, 'index'])->name('cotizaciones');
     });
 
-    // COTIZACIONES - Accesible para admin y asistente
+    // Accesible para admin y asistente
     Route::middleware(['auth', 'check.user.type:admin,asistente'])->group(function () {
         Route::resource('cotizaciones', CotizacionController::class);
         Route::post('cotizaciones/{cotizacion}/enviar-revision', [CotizacionController::class, 'enviarRevision'])->name('cotizaciones.enviar-revision');
@@ -40,6 +47,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('cotizaciones/{cotizacion}/rechazar', [CotizacionController::class, 'rechazar'])->name('cotizaciones.rechazar');
         Route::get('cotizaciones/{cotizacion}/pdf', [CotizacionController::class, 'pdf'])->name('cotizaciones.pdf');
     Route::patch('cotizaciones/{cotizacion}/cambiar-estado', [CotizacionController::class, 'cambiarEstado'])->name('cotizaciones.cambiar-estado');
+
+        // CLIENTES
+        Route::get('/clientes/lista-json', [ClienteController::class, 'listaJson'])->name('clientes.lista-json');
+        Route::post('/clientes',           [ClienteController::class, 'guardar'])->name('clientes.guardar');
+        // CRUD de clientes
+        Route::resource('clientes', ClienteController::class)->except(['store']);
     });
 });
 

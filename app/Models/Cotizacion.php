@@ -16,6 +16,7 @@ class Cotizacion extends Model
     protected $fillable = [
         'folio',
         'fecha_emision',
+       'cliente_id',
         'cliente_nombre',
         'cliente_direccion',
         'cliente_nit',
@@ -140,4 +141,12 @@ class Cotizacion extends Model
             default => 'badge bg-secondary'
         };
     }
+
+    /**
+     * Relación con el cliente
+     */
+    public function cliente()
+        {
+            return $this->belongsTo(\App\Models\Cliente::class, 'cliente_id');
+        }
 } 

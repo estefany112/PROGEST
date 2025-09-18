@@ -165,7 +165,7 @@
                     <h3 class="text-xl font-semibold">Crear cotización</h3>
                 </div>
                 <p class="text-gray-400 mb-4">Genera cotizaciones rápidamente.</p>
-                <a href="#" class="text-green-400 hover:text-green-300 font-medium">Cotizar ahora →</a>
+                <a href="{{ route('cotizaciones.create') }}" class="text-green-400 hover:text-green-300 font-medium">Cotizar ahora →</a>
             </div>
 
             <!-- Ver pedidos -->
