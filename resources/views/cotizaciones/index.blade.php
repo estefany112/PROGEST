@@ -13,12 +13,12 @@
 
     <div class="pt-2 pb-10">
         @if(session('success'))
-            <div class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded mb-4">
+            <div id="alert-message" class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded mb-4 duration-500">
                 {{ session('success') }}
             </div>
         @endif
         @if(session('error'))
-            <div class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
+            <div id="alert-message" class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4 duration-500">
                 {{ session('error') }}
             </div>
         @endif
@@ -178,5 +178,15 @@
         function cerrarModalRechazo() {
             document.getElementById('modalRechazo').classList.add('hidden');
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+        const alert = document.getElementById("alert-message");
+        if (alert) {
+            setTimeout(() => {
+                alert.style.opacity = "0";
+                setTimeout(() => alert.remove(), 500); // lo elimina tras animarse
+            }, 2000); // 2 segundos visible
+        }
+    });
     </script>
 @endsection

@@ -12,8 +12,8 @@
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-400 uppercase">Usuarios</p>
-                    <h2 class="text-2xl font-bold text-white">{{ $totalUsuarios ?? 125 }}</h2>
+                    <p class="text-sm text-gray-400 uppercase">Clientes</p>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalClientes }}</h2>
                 </div>
                 <div class="bg-blue-600 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-400 uppercase">Cotizaciones</p>
-                    <h2 class="text-2xl font-bold text-white">{{ $totalCotizaciones ?? 78 }}</h2>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalCotizaciones}}</h2>
                 </div>
                 <div class="bg-green-600 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-400 uppercase">Pedidos</p>
+                    <p class="text-sm text-gray-400 uppercase">Ordenes de Compra</p>
                     <h2 class="text-2xl font-bold text-white">{{ $totalPedidos ?? 42 }}</h2>
                 </div>
                 <div class="bg-yellow-500 text-white p-2 rounded-full">
@@ -54,7 +54,7 @@
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-400 uppercase">Facturas SAT</p>
+                    <p class="text-sm text-gray-400 uppercase">Facturas</p>
                     <h2 class="text-2xl font-bold text-white">{{ $totalFacturas ?? 30 }}</h2>
                 </div>
                 <div class="bg-purple-600 text-white p-2 rounded-full">

@@ -120,8 +120,14 @@ class CotizacionController extends Controller
      */
     public function edit(Cotizacion $cotizacion)
     {
-        $this->authorize('update', $cotizacion);
+        // Si la cotización ya fue aprobada, redirigir a una vista especial
+        if ($cotizacion->estado === 'aprobada') {
+            return redirect()->route('cotizaciones.index')
+                ->with('error', 'Esta cotización ya fue aprobada y no puede editarse.');
+        }
         
+        $this->authorize('update', $cotizacion);
+
         $cotizacion->load('items');
         
         return view('cotizaciones.edit', compact('cotizacion'));
