@@ -16,22 +16,22 @@ class CotizacionController extends Controller
     /**
      * Mostrar listado de cotizaciones
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $query = Cotizacion::query()->with('creadaPor');
         
-        if ($user->tipo === 'admin') {
-            // Admin ve todas las cotizaciones
-            $cotizaciones = Cotizacion::with(['creadaPor', 'revisadaPor'])
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
-        } else {
-            // Asistente ve solo sus cotizaciones
-            $cotizaciones = Cotizacion::with(['creadaPor', 'revisadaPor'])
-                ->where('creada_por', $user->id)
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
+        // 🔹 Admin ve todas, asistente solo las suyas
+        if ($user->tipo === 'asistente') {
+            $query->where('creada_por', $user->id);
         }
+
+        // 🔹 Si el filtro de estado está activo
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        $cotizaciones = $query->orderBy('created_at', 'desc')->paginate(10);
 
         return view('cotizaciones.index', compact('cotizaciones'));
     }
@@ -289,26 +289,46 @@ class CotizacionController extends Controller
     {
         $this->authorize('update', $cotizacion);
 
-        $request->validate([
-            'estado' => [
-                'required',
-                Rule::in(['borrador', 'en_revision', 'aprobada', 'rechazada'])
-            ],
-        ]);
+    $user = Auth::user();
+    $nuevoEstado = $request->estado;
 
-        $cotizacion->estado = $request->estado;
-        // Si se rechaza, limpiar comentario si no se envía
-        if ($request->estado !== 'rechazada') {
-            $cotizacion->comentario_rechazo = null;
-        }
-        // Si se aprueba o rechaza, guardar quién revisó
-        if (in_array($request->estado, ['aprobada', 'rechazada'])) {
-            $cotizacion->revisada_por = Auth::id();
-        } else {
-            $cotizacion->revisada_por = null;
-        }
-        $cotizacion->save();
+    // 🔹 Validar según rol
+    if ($user->tipo === 'asistente' && !in_array($nuevoEstado, ['borrador', 'en_revision'])) {
+        return back()->with('error', 'Como asistente solo puedes cambiar a Borrador o En Revisión.');
+    }
 
-        return back()->with('success', 'Estado de la cotización actualizado correctamente.');
+    if ($user->tipo === 'admin' && !in_array($nuevoEstado, ['aprobada', 'rechazada'])) {
+        return back()->with('error', 'Como administrador solo puedes Aprobar o Rechazar.');
+    }
+
+    $request->validate([
+        'estado' => [
+            'required',
+            Rule::in(['borrador', 'en_revision', 'aprobada', 'rechazada'])
+        ],
+    ]);
+
+    $cotizacion->estado = $nuevoEstado;
+
+    // 🔹 Si se rechaza, guardar comentario (si viene)
+    if ($nuevoEstado === 'rechazada') {
+        $cotizacion->comentario_rechazo = $request->comentario_rechazo ?? null;
+        $cotizacion->revisada_por = $user->id;
+    }
+
+    // 🔹 Si se aprueba
+    if ($nuevoEstado === 'aprobada') {
+        $cotizacion->revisada_por = $user->id;
+    }
+
+    // 🔹 Si vuelve a borrador/en_revision
+    if (in_array($nuevoEstado, ['borrador', 'en_revision'])) {
+        $cotizacion->revisada_por = null;
+        $cotizacion->comentario_rechazo = null;
+    }
+
+    $cotizacion->save();
+
+    return back()->with('success', 'Estado de la cotización actualizado correctamente.');
     }
 } 

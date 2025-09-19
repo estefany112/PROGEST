@@ -97,7 +97,7 @@
                 </div>
             </div>
             <div class="flex justify-end mb-4">
-                <a href="{{ route('cotizaciones') }}" class="inline-block px-6 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">
+                <a href="{{ route('cotizaciones.index') }}" class="inline-block px-6 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">
                     Ver todas las cotizaciones
                 </a>
             </div>

@@ -182,7 +182,7 @@
 
                     <!-- Botones -->
                     <div class="flex justify-end space-x-4">
-                        <a href="{{ route('cotizaciones') }}"
+                        <a href="{{ route('cotizaciones.index') }}"
                             class="px-4 py-2 text-gray-300 border border-gray-700 rounded-md hover:bg-gray-700">
                             Cancelar
                         </a>

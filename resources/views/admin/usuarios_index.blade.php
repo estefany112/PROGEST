@@ -7,32 +7,30 @@
   </div>
 
   {{-- Filtros / búsqueda --}}
-  <form method="GET" class="mb-4">
-    <div class="grid md:grid-cols-4 gap-3">
-      <input name="q" value="{{ $q }}" placeholder="Buscar nombre, email o estado..."
-             class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded">
+  <form method="GET" class="flex gap-3 mb-4">
+    <input name="q" value="{{ request('q') }}" 
+           placeholder="Buscar nombre, email o estado..." 
+           class="px-3 py-2 border rounded bg-gray-800 text-white">
 
-      <select name="estado" class="px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded">
-        <option value="">— Estado —</option>
-        @foreach(['activo','pendiente','rechazado'] as $e)
-          <option value="{{ $e }}" @selected($estado===$e)>{{ ucfirst($e) }}</option>
+    <select name="estado" class="px-3 py-2 border rounded bg-gray-800 text-white">
+        <option value="">-- Estado --</option>
+        @foreach(['pendiente', 'activo', 'rechazado'] as $e)
+            <option value="{{ $e }}" @selected(request('estado') === $e)>
+                {{ ucfirst($e) }}
+            </option>
         @endforeach
-      </select>
+    </select>
 
-      <select name="rol" class="px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded">
-        <option value="">— Rol —</option>
+    <select name="rol" class="px-3 py-2 border rounded bg-gray-800 text-white">
+        <option value="">-- Rol --</option>
         @foreach($roles as $r)
-          <option value="{{ $r }}" @selected($rol===$r)>{{ ucfirst($r) }}</option>
+            <option value="{{ $r }}" @selected(request('rol') === $r)>
+                {{ ucfirst($r) }}
+            </option>
         @endforeach
-      </select>
+    </select>
 
-      <div class="flex gap-2">
-        <button class="px-4 py-2 border border-gray-700 text-gray-300 rounded hover:bg-gray-800">Filtrar</button>
-        @if($q || $estado || $rol)
-          <a href="{{ route('usuarios.index') }}" class="px-4 py-2 border border-gray-700 text-gray-300 rounded hover:bg-gray-800">Limpiar</a>
-        @endif
-      </div>
-    </div>
+    <button type="submit" class="bg-blue-600 px-4 py-2 text-white rounded">Filtrar</button>
   </form>
 
   @if(session('success'))
@@ -65,18 +63,36 @@
           <tr>
             <td class="px-4 py-3">{{ $u->name }}</td>
             <td class="px-4 py-3">{{ $u->email }}</td>
-            <td class="px-4 py-3">{{ $u->roles->pluck('name')->join(', ') ?: '—' }}</td>
+            <td class="px-4 py-3">
+              @if($u->id !== 1)
+                <form action="{{ route('usuarios.update', $u->id) }}" method="POST">
+                  @csrf
+                  @method('PUT')
+                  <select name="tipo" 
+                          class="bg-gray-800 border border-gray-700 text-white text-sm rounded px-2 py-1"
+                          onchange="this.form.submit()">
+                      <option value="">-- Selecciona --</option>
+                      <option value="admin" {{ $u->tipo === 'admin' ? 'selected' : '' }}>Admin</option>
+                      <option value="asistente" {{ $u->tipo === 'asistente' ? 'selected' : '' }}>Asistente</option>
+                  </select>
+                </form>
+              @else
+                <span class="text-gray-400 italic">Admin (Protegido)</span>
+              @endif
+            </td>
             <td class="px-4 py-3">
               <span class="px-2 py-1 text-xs rounded {{ $badge }}">{{ ucfirst($u->estado) }}</span>
             </td>
             <td class="px-4 py-3">
               <div class="flex justify-end gap-2">
-                <a href="{{ route('usuarios.edit',$u->id) }}" class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded">Editar</a>
-                @if(auth()->id() !== $u->id)
+                @if($u->id !== 1) 
+                  <a href="{{ route('usuarios.edit',$u->id) }}" class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded">Editar</a>
                   <form action="{{ route('usuarios.destroy',$u->id) }}" method="POST" onsubmit="return confirm('¿Eliminar este usuario?');">
                     @csrf @method('DELETE')
                     <button class="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 text-white rounded">Eliminar</button>
                   </form>
+                @else
+                  <span class="text-gray-400 italic">Protegido</span>
                 @endif
               </div>
             </td>

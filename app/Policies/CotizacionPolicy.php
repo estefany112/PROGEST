@@ -52,7 +52,7 @@ class CotizacionPolicy
         // Solo el asistente que creó la cotización puede editarla si está en borrador
         return $user->tipo === 'asistente' && 
                $cotizacion->creada_por === $user->id && 
-               $cotizacion->estado === 'borrador';
+               in_array($cotizacion->estado, ['borrador', 'en_revision']);
     }
 
     /**

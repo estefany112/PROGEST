@@ -15,6 +15,6 @@ class AsistenteCotizacionesController extends Controller
         $cotizaciones = Cotizacion::where('creada_por', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
-        return view('asistente.cotizaciones', compact('cotizaciones'));
+        return view('cotizaciones', compact('cotizaciones'));
     }
 }

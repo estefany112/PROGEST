@@ -6,7 +6,12 @@ use App\Http\Controllers\CotizacionController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Asistente\AsistenteDashboardController;
+use App\Http\Controllers\AsistenteCotizacionesController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\OrdenCompraController;
+use App\Http\Controllers\ReporteTrabajoController;
+use App\Http\Controllers\FacturaController;
+use App\Models\OrdenCompra;
 
 Route::get('/debug-rol', function () {
     return view('debug-rol');
@@ -20,7 +25,7 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
 
     // ADMIN
-    Route::middleware(['role:admin'])->prefix('admin')->group(function () {
+    Route::middleware(['role:admin', 'check.user.type:admin'])->prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
         Route::get('/usuarios-pendientes', [UsuarioController::class, 'pendientes'])->name('admin.usuarios.pendientes');
         Route::put('/usuarios-aprobar/{id}', [UsuarioController::class, 'aprobar'])->name('admin.usuarios.aprobar');
@@ -34,25 +39,39 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // ASISTENTE
-    Route::middleware(['role:asistente'])->prefix('asistente')->group(function () {
+    Route::middleware(['role:asistente', 'check.user.type:admin'])->prefix('asistente')->group(function () {
     Route::get('/dashboard', [AsistenteDashboardController::class, 'index'])->name('asistente.dashboard');
-    Route::get('/cotizaciones', [\App\Http\Controllers\AsistenteCotizacionesController::class, 'index'])->name('cotizaciones');
     });
 
     // Accesible para admin y asistente
     Route::middleware(['auth', 'check.user.type:admin,asistente'])->group(function () {
+        // COTIZACIONES
+         Route::get('/cotizaciones', [AsistenteCotizacionesController::class, 'index'])->name('cotizaciones');
         Route::resource('cotizaciones', CotizacionController::class);
         Route::post('cotizaciones/{cotizacion}/enviar-revision', [CotizacionController::class, 'enviarRevision'])->name('cotizaciones.enviar-revision');
         Route::post('cotizaciones/{cotizacion}/aprobar', [CotizacionController::class, 'aprobar'])->name('cotizaciones.aprobar');
         Route::post('cotizaciones/{cotizacion}/rechazar', [CotizacionController::class, 'rechazar'])->name('cotizaciones.rechazar');
         Route::get('cotizaciones/{cotizacion}/pdf', [CotizacionController::class, 'pdf'])->name('cotizaciones.pdf');
-    Route::patch('cotizaciones/{cotizacion}/cambiar-estado', [CotizacionController::class, 'cambiarEstado'])->name('cotizaciones.cambiar-estado');
-
+        Route::patch('cotizaciones/{cotizacion}/cambiar-estado', [CotizacionController::class, 'cambiarEstado'])->name('cotizaciones.cambiar-estado');
         // CLIENTES
         Route::get('/clientes/lista-json', [ClienteController::class, 'listaJson'])->name('clientes.lista-json');
         Route::post('/clientes',           [ClienteController::class, 'guardar'])->name('clientes.guardar');
         // CRUD de clientes
         Route::resource('clientes', ClienteController::class)->except(['store']);
+        // ÓRDENES DE COMPRA
+        Route::get('/ordenes-compra', [OrdenCompraController::class, 'index'])->name('ordenes-compra.index');   
+        Route::get('/ordenes-compra/create', [OrdenCompraController::class, 'create'])->name('ordenes-compra.create'); 
+        Route::post('/ordenes-compra', [OrdenCompraController::class, 'store'])->name('ordenes-compra.store');  
+        Route::get('/ordenes-compra/{orden}', [OrdenCompraController::class, 'show'])->name('ordenes-compra.show'); 
+        Route::get('/ordenes-compra/{orden}/edit', [OrdenCompraController::class, 'edit'])->name('ordenes-compra.edit'); 
+        Route::put('/ordenes-compra/{orden}', [OrdenCompraController::class, 'update'])->name('ordenes-compra.update'); 
+        Route::delete('/ordenes-compra/{orden}', [OrdenCompraController::class, 'destroy'])->name('ordenes-compra.destroy'); 
+        // REPORTES DE TRABAJO
+        Route::resource('reportes-trabajo', ReporteTrabajoController::class);
+
+        // FACTURAS
+        Route::resource('facturas', FacturaController::class);
+
     });
 });
 
