@@ -104,12 +104,34 @@
             <a href="{{ route('ordenes-compra.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a órdenes →</a>
         </div>
 
-        <!-- Facturas -->
-        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
-            <h3 class="text-xl font-semibold text-white mb-2">Facturas</h3>
-            <p class="text-gray-400 mb-4">Valida facturas generadas.</p>
-            <a href="{{ route('facturas.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a facturas →</a>
-        </div>
+        <!-- Reportes de Trabajo -->
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
+        <h3 class="text-xl font-semibold text-white mb-2">Reportes de Trabajo</h3>
+        <p class="text-gray-400 mb-4">Adjunta documentos de evidencia de servicios realizados.</p>
+        <a href="{{ route('reportes-trabajo.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a reportes →</a>
     </div>
-</div>
+    
+       <!-- Facturas -->
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
+        <h3 class="text-xl font-semibold text-white mb-2">Facturas</h3>
+        <p class="text-gray-400 mb-4">Gestiona las facturas registradas y vinculadas a órdenes de compra.</p>
+        <a href="{{ route('facturas.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a facturas →</a>
+    </div>
+
+    <!-- Pagos -->
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
+        <h3 class="text-xl font-semibold text-white mb-2">Pagos</h3>
+        <p class="text-gray-400 mb-4">Registra y consulta el estado de los pagos de facturas.</p>
+        <a href="{{ route('pagos.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a pagos →</a>
+    </div>
+
+    <!-- Contraseñas de Pago -->
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
+        <h3 class="text-xl font-semibold text-white mb-2">Contraseñas de Pago</h3>
+        <p class="text-gray-400 mb-4">Valida las contraseñas asociadas a facturas antes de su cancelación.</p>
+        <a href="{{ route('contraseñas.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a contraseñas →</a>
+    </div>
+
+    </div>
+    </div>
 @endsection

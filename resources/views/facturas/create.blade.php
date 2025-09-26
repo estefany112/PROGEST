@@ -33,7 +33,7 @@
         <!-- Número de factura -->
         <div>
             <label class="block mb-2 text-gray-300">Número Factura:</label>
-            <input type="text" name="numero" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+            <input type="text" name="numero_factura" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
         </div>
 
         <!-- Fecha -->
@@ -45,7 +45,7 @@
         <!-- Monto -->
         <div>
             <label class="block mb-2 text-gray-300">Monto:</label>
-            <input type="number" step="0.01" name="monto" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+            <input type="number" step="0.01" name="monto_total" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
         </div>
 
         <!-- Archivo PDF -->

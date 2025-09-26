@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reporte_trabajos', function (Blueprint $table) {
-        $table->id();
-        $table->unsignedBigInteger('orden_compra_id');
-        $table->string('archivo'); // ruta del archivo (pdf, docx, imagen, etc.)
-        $table->timestamps();
+        Schema::table('facturas', function (Blueprint $table) {
+        $table->string('numero_factura')->nullable();
+        $table->date('fecha_emision')->nullable();
+        $table->decimal('monto_total', 10, 2)->nullable();
+        $table->unsignedBigInteger('orden_compra_id')->nullable();
+        $table->unsignedBigInteger('cliente_id')->nullable();
 
         $table->foreign('orden_compra_id')->references('id')->on('ordenes_compra')->onDelete('cascade');
+        $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('cascade');
     });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reporte_trabajos');
+        //
     }
 };

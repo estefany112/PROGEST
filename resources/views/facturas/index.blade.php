@@ -21,10 +21,10 @@
         <tbody>
             @foreach($facturas as $factura)
                 <tr class="border-t border-gray-700">
-                    <td class="px-4 py-2 text-white">{{ $factura->ordenCompra->numero_oc ?? 'N/A' }}</td>
-                    <td class="px-4 py-2 text-white">{{ $factura->numero }}</td>
+                    <td class="px-4 py-2 text-white">{{ $factura->ordenCompra->id ?? 'N/A' }}</td>
+                    <td class="px-4 py-2 text-white">{{ $factura->numero_factura }}</td>
                     <td class="px-4 py-2 text-white">{{ $factura->fecha_emision }}</td>
-                    <td class="px-4 py-2 text-white">Q{{ number_format($factura->monto, 2) }}</td>
+                    <td class="px-4 py-2 text-white">Q{{ number_format($factura->monto_total, 2) }}</td>
                     <td class="px-4 py-2">
                         <a href="{{ route('facturas.show', $factura) }}" class="text-blue-400">Ver</a> |
                         <a href="{{ route('facturas.edit', $factura) }}" class="text-yellow-400">Editar</a> |

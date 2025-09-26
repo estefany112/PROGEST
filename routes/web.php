@@ -11,7 +11,10 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\OrdenCompraController;
 use App\Http\Controllers\ReporteTrabajoController;
 use App\Http\Controllers\FacturaController;
+use App\Http\Controllers\ContraseñaPagoController;
+use App\Http\Controllers\PagoController;
 use App\Models\OrdenCompra;
+
 
 Route::get('/debug-rol', function () {
     return view('debug-rol');
@@ -39,14 +42,13 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // ASISTENTE
-    Route::middleware(['role:asistente', 'check.user.type:admin'])->prefix('asistente')->group(function () {
+    Route::middleware(['role:asistente', 'check.user.type:asistente'])->prefix('asistente')->group(function () {
     Route::get('/dashboard', [AsistenteDashboardController::class, 'index'])->name('asistente.dashboard');
     });
 
     // Accesible para admin y asistente
     Route::middleware(['auth', 'check.user.type:admin,asistente'])->group(function () {
         // COTIZACIONES
-         Route::get('/cotizaciones', [AsistenteCotizacionesController::class, 'index'])->name('cotizaciones');
         Route::resource('cotizaciones', CotizacionController::class);
         Route::post('cotizaciones/{cotizacion}/enviar-revision', [CotizacionController::class, 'enviarRevision'])->name('cotizaciones.enviar-revision');
         Route::post('cotizaciones/{cotizacion}/aprobar', [CotizacionController::class, 'aprobar'])->name('cotizaciones.aprobar');
@@ -66,11 +68,18 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/ordenes-compra/{orden}/edit', [OrdenCompraController::class, 'edit'])->name('ordenes-compra.edit'); 
         Route::put('/ordenes-compra/{orden}', [OrdenCompraController::class, 'update'])->name('ordenes-compra.update'); 
         Route::delete('/ordenes-compra/{orden}', [OrdenCompraController::class, 'destroy'])->name('ordenes-compra.destroy'); 
-        // REPORTES DE TRABAJO
-        Route::resource('reportes-trabajo', ReporteTrabajoController::class);
-
         // FACTURAS
         Route::resource('facturas', FacturaController::class);
+
+        // PAGOS
+        Route::resource('pagos', App\Http\Controllers\PagoController::class)->only(['index', 'create', 'store']);
+
+        // CONTRASEÑAS DE PAGO
+        Route::resource('contraseñas', App\Http\Controllers\ContraseñaPagoController::class)->only(['index', 'create', 'store']);
+        Route::patch('contraseñas/{id}/validar', [App\Http\Controllers\ContraseñaPagoController::class, 'validar'])->name('contraseñas.validar');
+
+        // REPORTES DE TRABAJO
+        Route::resource('reportes-trabajo', ReporteTrabajoController::class);
 
     });
 });

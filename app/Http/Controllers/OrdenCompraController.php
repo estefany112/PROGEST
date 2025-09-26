@@ -35,6 +35,7 @@ class OrdenCompraController extends Controller
 
     public function store(Request $request)
     {
+     
         $request->validate([
             'cotizacion_id'   => 'required|exists:cotizaciones,id',
             'numero_oc'       => 'required|unique:ordenes_compra,numero_oc',

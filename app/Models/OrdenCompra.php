@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class OrdenCompra extends Model
 {
@@ -30,6 +31,21 @@ class OrdenCompra extends Model
     public function ordenCompra()
     {
         return $this->belongsTo(User::class, 'creada_por');
+    }
+
+    public function facturas()
+    {
+        return $this->hasMany(Factura::class);
+    }
+
+    public function reportes()
+    {
+        return $this->hasMany(ReporteTrabajo::class);
+    }
+
+    public function getArchivoUrlAttribute()
+    {
+        return $this->archivo ? Storage::url($this->archivo) : null;
     }
 
 }

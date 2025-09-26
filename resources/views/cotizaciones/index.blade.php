@@ -4,15 +4,18 @@
 <div class="max-w-7xl mx-auto py-10 px-6">
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-2xl font-bold text-gray-900">Cotizaciones</h1>
-        @if(Auth::user()->tipo === 'asistente')
+
+        {{-- Asistente puede crear cotizaciones --}}
+        @role('asistente')
             <a href="{{ route('cotizaciones.create') }}" 
                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center">
                 <i class="fas fa-plus mr-2"></i>Nueva Cotización
             </a>
-        @endif
+        @endrole
     </div>
 
     <div class="pt-2 pb-10">
+        {{-- Mensajes flash --}}
         @if(session('success'))
             <div id="alert-message" class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded mb-4 duration-500">
                 {{ session('success') }}
@@ -38,8 +41,8 @@
             </button>
         </form>
 
-        @if(Auth::user()->tipo === 'admin')
-            <!-- Mensaje admin -->
+        {{-- Mensajes según rol --}}
+        @role('admin')
             <div class="mb-6 p-4 bg-blue-900 border border-blue-700 rounded-lg">
                 <h4 class="text-lg font-medium text-blue-100 mb-2">Panel de Revisión</h4>
                 <p class="text-blue-200">
@@ -47,8 +50,9 @@
                     requieren tu aprobación o rechazo.
                 </p>
             </div>
-        @elseif(Auth::user()->tipo === 'asistente')
-            <!-- Mensaje asistente -->
+        @endrole
+
+        @role('asistente')
             <div class="mb-6 p-4 bg-blue-900 border border-blue-700 rounded-lg">
                 <h4 class="text-lg font-medium text-blue-100 mb-2">Gestión de Cotizaciones</h4>
                 <p class="text-blue-200">
@@ -56,7 +60,7 @@
                     Una vez enviadas, el administrador las revisará.
                 </p>
             </div>
-        @endif
+        @endrole
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg">
@@ -71,9 +75,9 @@
                                     <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Fecha</th>
                                     <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Total</th>
                                     <th class="px-6 py-3 text-center text-sm text-gray-300 uppercase">Acciones</th>
-                                    @if(Auth::user()->tipo === 'admin')
+                                    @role('admin')
                                         <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Creada por</th>
-                                    @endif
+                                    @endrole
                                     <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Estado</th>
                                 </tr>
                             </thead>
@@ -86,18 +90,21 @@
                                         <td class="px-6 py-4 text-white">Q{{ number_format($cotizacion->total, 2) }}</td>
                                         <td class="px-6 py-4 text-sm font-medium">
                                             <div class="flex flex-wrap justify-center gap-2 items-center">
+
                                                 {{-- Select de estado --}}
                                                 <form action="{{ route('cotizaciones.cambiar-estado', $cotizacion) }}" method="POST">
                                                     @csrf
                                                     @method('PATCH')
                                                     <select name="estado" class="px-2 py-1 border border-gray-700 bg-gray-900 text-gray-100 rounded-md text-xs">
-                                                        @if(Auth::user()->tipo === 'admin')
+                                                        @role('admin')
                                                             <option value="aprobada" {{ $cotizacion->estado == 'aprobada' ? 'selected' : '' }}>Aprobada</option>
                                                             <option value="rechazada" {{ $cotizacion->estado == 'rechazada' ? 'selected' : '' }}>Rechazada</option>
-                                                        @elseif(Auth::user()->tipo === 'asistente')
+                                                        @endrole
+
+                                                        @role('asistente')
                                                             <option value="borrador" {{ $cotizacion->estado == 'borrador' ? 'selected' : '' }}>Borrador</option>
                                                             <option value="en_revision" {{ $cotizacion->estado == 'en_revision' ? 'selected' : '' }}>En Revisión</option>
-                                                        @endif
+                                                        @endrole
                                                     </select>
                                                     <button type="submit" class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-1 px-3 rounded text-xs ml-2">
                                                         Actualizar
@@ -115,21 +122,23 @@
                                                 <a href="{{ route('cotizaciones.show', $cotizacion) }}" 
                                                    class="bg-gray-600 hover:bg-gray-800 text-white font-bold py-1 px-3 rounded text-xs">Ver</a>
 
-                                                <form action="{{ route('cotizaciones.destroy', $cotizacion) }}" 
-                                                      method="POST" 
-                                                      onsubmit="return confirm('¿Seguro que deseas eliminar esta cotización?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded text-xs">
-                                                        Eliminar
-                                                    </button>
-                                                </form>
+                                                @role('admin')
+                                                    <form action="{{ route('cotizaciones.destroy', $cotizacion) }}" 
+                                                          method="POST" 
+                                                          onsubmit="return confirm('¿Seguro que deseas eliminar esta cotización?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded text-xs">
+                                                            Eliminar
+                                                        </button>
+                                                    </form>
+                                                @endrole
                                             </div>
                                         </td>
 
-                                        @if(Auth::user()->tipo === 'admin')
+                                        @role('admin')
                                             <td class="px-6 py-4 text-white">{{ $cotizacion->creadaPor->name }}</td>
-                                        @endif
+                                        @endrole
 
                                         <td class="px-6 py-4">
                                             <span class="{{ $cotizacion->estado_clase }} font-bold text-base text-white">

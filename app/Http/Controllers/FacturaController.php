@@ -9,103 +9,126 @@ use App\Models\OrdenCompra;
 class FacturaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Listado de facturas.
      */
     public function index()
     {
-        $facturas = Factura::with('ordenCompra')->latest()->paginate(10);
+        $facturas = Factura::with(['ordenCompra.cotizacion.cliente'])
+            ->latest()
+            ->paginate(10);
+
         return view('facturas.index', compact('facturas'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Formulario de creación.
      */
     public function create()
     {
-        $ordenes = \App\Models\OrdenCompra::with('cotizacion')->latest()->get();
+        // Solo ordenes con cotización aprobada
+        $ordenes = OrdenCompra::with('cotizacion.cliente')
+            ->latest()
+            ->get();
+
         return view('facturas.create', compact('ordenes'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guardar nueva factura.
      */
     public function store(Request $request)
     {
         $request->validate([
-        'cotizacion_id' => 'required|exists:cotizaciones,id',
-        'numero_oc'     => 'required|unique:ordenes_compra,numero_oc',
-        'fecha'         => 'required|date',
-        'monto_total'   => 'required|numeric|min:0',
-        'archivo_oc_path' => 'nullable|file|mimes:pdf,jpg,png'
-    ]);
+            'orden_compra_id' => 'required|exists:ordenes_compra,id',
+            'numero_factura'  => 'required|string|max:50|unique:facturas,numero_factura',
+            'fecha_emision'   => 'required|date',
+            'monto_total'     => 'required|numeric|min:0',
+            'archivo_pdf_path'=> 'nullable|file|max:10240'
+        ]);
 
-    $data = $request->only(['cotizacion_id', 'numero_oc', 'fecha', 'monto_total']);
+        // Traer orden y su cliente
+        $orden = OrdenCompra::with('cotizacion.cliente')
+            ->findOrFail($request->orden_compra_id);
 
-    if ($request->hasFile('archivo_oc_path')) {
-        $data['archivo_oc_path'] = $request->file('archivo_oc_path')->store('ordenes', 'public');
-    }
+        $data = [
+            'orden_compra_id' => $request->orden_compra_id,
+            'cliente_id'      => $orden->cotizacion->cliente_id,
+            'numero_factura'  => $request->numero_factura,
+            'fecha_emision'   => $request->fecha_emision,
+            'monto_total'     => $request->monto_total,
+        ];
 
-    $cotizacion = Cotizacion::findOrFail($request->cotizacion_id);
+        if ($request->hasFile('archivo_pdf_path')) {
+            $data['archivo_pdf_path'] = $request->file('archivo_pdf_path')->store('facturas', 'public');
+        }
 
-    if ($cotizacion->estado !== 'aprobada') {
-        return redirect()->route('cotizaciones.index')
-            ->with('error', 'No puedes crear una orden de compra desde una cotización que no está aprobada.');
-    }
+        Factura::create($data);
 
-    OrdenCompra::create($data);
-
-    return redirect()->route('ordenes-compra.index')
-        ->with('success', 'Orden de compra creada correctamente.');
+        return redirect()->route('facturas.index')
+            ->with('success', 'Factura creada correctamente.');
     }
 
     /**
-     * Display the specified resource.
+     * Mostrar detalle de una factura.
      */
-    public function show(string $id)
+    public function show($id)
     {
+        $factura = Factura::with(['ordenCompra.cotizacion.cliente'])
+            ->findOrFail($id);
+
         return view('facturas.show', compact('factura'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Formulario de edición.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        $ordenes = OrdenCompra::all();
+        $factura = Factura::findOrFail($id);
+        $ordenes = OrdenCompra::with('cotizacion.cliente')->get();
+
         return view('facturas.edit', compact('factura', 'ordenes'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualizar factura.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
+        $factura = Factura::findOrFail($id);
+
         $request->validate([
-            'orden_compra_id'  => 'required|exists:ordenes_compra,id',
-            'numero'           => 'required|string',
-            'fecha_emision'    => 'required|date',
-            'monto'            => 'required|numeric',
-            'archivo_pdf_path' => 'nullable|file|mimes:pdf'
+            'orden_compra_id' => 'required|exists:ordenes_compra,id',
+            'numero_factura'  => 'required|string|max:50|unique:facturas,numero_factura,' . $factura->id,
+            'fecha_emision'   => 'required|date',
+            'monto_total'     => 'required|numeric|min:0',
+            'archivo_pdf_path'=> 'nullable|file|max:10240'
         ]);
 
-        $data = $request->all();
+        $data = $request->only(['orden_compra_id', 'numero_factura', 'fecha_emision', 'monto_total']);
+
         if ($request->hasFile('archivo_pdf_path')) {
             $data['archivo_pdf_path'] = $request->file('archivo_pdf_path')->store('facturas', 'public');
         }
+
+        // Asegurar que se actualiza el cliente según la orden
+        $orden = OrdenCompra::with('cotizacion.cliente')->findOrFail($request->orden_compra_id);
+        $data['cliente_id'] = $orden->cotizacion->cliente_id;
 
         $factura->update($data);
 
         return redirect()->route('facturas.index')
             ->with('success', 'Factura actualizada correctamente.');
-   
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Eliminar factura.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
+        $factura = Factura::findOrFail($id);
         $factura->delete();
+
         return redirect()->route('facturas.index')
             ->with('success', 'Factura eliminada correctamente.');
     }

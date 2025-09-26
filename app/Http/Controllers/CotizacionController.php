@@ -286,18 +286,18 @@ class CotizacionController extends Controller
      * Cambiar el estado de la cotización (solo admin)
      */
     public function cambiarEstado(Request $request, Cotizacion $cotizacion)
-    {
-        $this->authorize('update', $cotizacion);
+{
+    $this->authorize('update', $cotizacion);
 
     $user = Auth::user();
     $nuevoEstado = $request->estado;
 
-    // 🔹 Validar según rol
-    if ($user->tipo === 'asistente' && !in_array($nuevoEstado, ['borrador', 'en_revision'])) {
+    // 🔹 Validar según rol con Spatie
+    if ($user->hasRole('asistente') && !in_array($nuevoEstado, ['borrador', 'en_revision'])) {
         return back()->with('error', 'Como asistente solo puedes cambiar a Borrador o En Revisión.');
     }
 
-    if ($user->tipo === 'admin' && !in_array($nuevoEstado, ['aprobada', 'rechazada'])) {
+    if ($user->hasRole('admin') && !in_array($nuevoEstado, ['aprobada', 'rechazada'])) {
         return back()->with('error', 'Como administrador solo puedes Aprobar o Rechazar.');
     }
 
@@ -330,5 +330,6 @@ class CotizacionController extends Controller
     $cotizacion->save();
 
     return back()->with('success', 'Estado de la cotización actualizado correctamente.');
-    }
-} 
+}
+
+ }

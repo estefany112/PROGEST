@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reporte_trabajos', function (Blueprint $table) {
+        Schema::create('contraseñas_pago', function (Blueprint $table) {
         $table->id();
-        $table->unsignedBigInteger('orden_compra_id');
-        $table->string('archivo'); // ruta del archivo (pdf, docx, imagen, etc.)
+        $table->unsignedBigInteger('factura_id');
+        $table->string('contraseña');
+        $table->boolean('validada')->default(false);
         $table->timestamps();
 
-        $table->foreign('orden_compra_id')->references('id')->on('ordenes_compra')->onDelete('cascade');
+        $table->foreign('factura_id')->references('id')->on('facturas')->onDelete('cascade');
     });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reporte_trabajos');
+        //
     }
 };
