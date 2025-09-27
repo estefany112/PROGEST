@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Cotizacion;
 use App\Models\OrdenCompra;
 use App\Models\Factura;
+use App\Models\ReporteTrabajo;
+use App\Models\Pago;
 
 class AdminDashboardController extends Controller
 {
@@ -18,14 +20,18 @@ class AdminDashboardController extends Controller
         $totalUsuarios     = User::count();
         $totalCotizaciones = Cotizacion::count();
         $totalOrdenesCompra = OrdenCompra::count();
-       
+        $totalFactura = Factura::count();
+        $totalReporteTrabajo = ReporteTrabajo::count();
+        $totalPago = Pago::count();
 
         return view('admin.dashboard', compact(
             'role',
             'totalUsuarios',
             'totalCotizaciones',
             'totalOrdenesCompra',
-            
+            'totalFactura',
+            'totalReporteTrabajo',
+            'totalPago',
         ));
     }
 }

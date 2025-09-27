@@ -57,12 +57,60 @@
             </div>
         </div>
 
+        <!-- Reportes de Trabajo -->
+        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-400 uppercase">Reportes de Trabajo</p>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalReporteTrabajo }}</h2>
+                </div>
+                <div class="bg-yellow-500 text-white p-2 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path d="M9 12h6m2 6H7a2 2 0 01-2-2V8a2 2 0 012-2h4l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
         <!-- Facturas -->
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-400 uppercase">Facturas</p>
-                    <h2 class="text-2xl font-bold text-white"></h2>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalFactura }}</h2>
+                </div>
+                <div class="bg-purple-600 text-white p-2 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path d="M12 8v8m0 0l-3-3m3 3l3-3M20 12A8 8 0 104 12a8 8 0 0016 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagos -->
+        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-400 uppercase">Pagos</p>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalPago}}</h2>
+                </div>
+                <div class="bg-purple-600 text-white p-2 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path d="M12 8v8m0 0l-3-3m3 3l3-3M20 12A8 8 0 104 12a8 8 0 0016 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contraseñas de pago -->
+        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-400 uppercase">Contraseñas de Pago</p>
+                    <h2 class="text-2xl font-bold text-white">0 </h2>
                 </div>
                 <div class="bg-purple-600 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
