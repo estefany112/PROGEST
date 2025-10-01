@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-           if (!Schema::hasColumn('users', 'estado')) {
-                $table->enum('estado', ['pendiente', 'activo', 'rechazado'])->default('pendiente');
-            }
+        Schema::table('contrasenas_pago', function (Blueprint $table) {
+             $table->date('fecha_aprox')->nullable()->after('fecha_documento');
         });
     }
 
@@ -23,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
+        Schema::table('contrasenas_pago', function (Blueprint $table) {
+              $table->dropColumn('fecha_aprox', 'fecha_documento');
         });
     }
 };

@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ordenes_compra', function (Blueprint $table) {
+         if (!Schema::hasTable('ordenes_compra')) {
+            Schema::create('ordenes_compra', function (Blueprint $table) {
             $table->id();
             // Relación con cotización
             $table->unsignedBigInteger('cotizacion_id');
@@ -39,7 +40,7 @@ return new class extends Migration
                   ->onDelete('set null');
         });
     }
-
+}
     /**
      * Reverse the migrations.
      */

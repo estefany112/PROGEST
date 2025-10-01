@@ -26,9 +26,9 @@ class Factura extends Model
         return $this->belongsTo(Cliente::class);
     }
 
-    public function pagos()
+    public function pago()
     {
-        return $this->hasMany(Pago::class);
+        return $this->hasOne(Pago::class);
     }
 
     public function contraseñaPago()

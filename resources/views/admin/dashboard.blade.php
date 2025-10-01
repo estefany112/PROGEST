@@ -89,12 +89,12 @@
             </div>
         </div>
 
-        <!-- Pagos -->
+        <!-- Contraseñas de pago -->
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-400 uppercase">Pagos</p>
-                    <h2 class="text-2xl font-bold text-white">{{ $totalPago}}</h2>
+                    <p class="text-sm text-gray-400 uppercase">Contraseñas de Pago</p>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalContrasenas }}</h2>
                 </div>
                 <div class="bg-purple-600 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
@@ -105,12 +105,12 @@
             </div>
         </div>
 
-        <!-- Contraseñas de pago -->
+        <!-- Pagos -->
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-400 uppercase">Contraseñas de Pago</p>
-                    <h2 class="text-2xl font-bold text-white">0 </h2>
+                    <p class="text-sm text-gray-400 uppercase">Pagos</p>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalPago}}</h2>
                 </div>
                 <div class="bg-purple-600 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
@@ -127,10 +127,6 @@
         <!-- Gestión de Usuarios -->
         <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
             <div class="flex items-center mb-2 text-white">
-                <svg class="w-6 h-6 mr-2 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
-                    viewBox="0 0 24 24">
-                    <path d="M5.121 17.804A9.969 9.969 0 0112 15c2.485 0 4.735.91 6.879 2.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
                 <h3 class="text-xl font-semibold">Gestión de Usuarios</h3>
             </div>
             <p class="text-gray-400 mb-4">Administra los usuarios registrados, aprueba o rechaza solicitudes y gestiona roles.</p>
@@ -166,18 +162,18 @@
         <a href="{{ route('facturas.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a facturas →</a>
     </div>
 
+    <!-- Contraseñas de Pago -->
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
+        <h3 class="text-xl font-semibold text-white mb-2">Contraseñas de Pago</h3>
+        <p class="text-gray-400 mb-4">Valida las contraseñas asociadas a facturas antes de su cancelación.</p>
+        <a href="{{ route('contrasenas.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a contraseñas →</a>
+    </div>
+
     <!-- Pagos -->
     <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
         <h3 class="text-xl font-semibold text-white mb-2">Pagos</h3>
         <p class="text-gray-400 mb-4">Registra y consulta el estado de los pagos de facturas.</p>
         <a href="{{ route('pagos.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a pagos →</a>
-    </div>
-
-    <!-- Contraseñas de Pago -->
-    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
-        <h3 class="text-xl font-semibold text-white mb-2">Contraseñas de Pago</h3>
-        <p class="text-gray-400 mb-4">Valida las contraseñas asociadas a facturas antes de su cancelación.</p>
-        <a href="{{ route('contraseñas.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a contraseñas →</a>
     </div>
 
     </div>

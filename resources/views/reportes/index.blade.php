@@ -21,7 +21,8 @@
             @forelse($reportes as $reporte)
             <tr class="border-t border-gray-700">
                 <td class="px-4 py-2 text-white">
-                    {{ $reporte->ordenCompra->numero_oc ?? 'N/A' }}
+                    {{ $reporte->ordenCompra->numero_oc ?? 'N/A' }} -
+                     Cliente: {{ $reporte->ordenCompra->cotizacion->cliente->nombre ?? 'N/A' }}
                 </td>
                 <td class="px-4 py-2 text-white">
                     @if($reporte->archivo_url)

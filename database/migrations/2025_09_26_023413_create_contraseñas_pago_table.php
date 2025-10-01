@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('contraseñas_pago', function (Blueprint $table) {
-        $table->id();
-        $table->unsignedBigInteger('factura_id');
-        $table->string('contraseña');
-        $table->boolean('validada')->default(false);
-        $table->timestamps();
+        Schema::create('contrasenas_pagos', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('factura_id');
+            $table->string('codigo'); // Documento contraseña
+            $table->string('archivo')->nullable(); // Archivo adjunto opcional
+            $table->timestamps();
 
-        $table->foreign('factura_id')->references('id')->on('facturas')->onDelete('cascade');
-    });
+            $table->foreign('factura_id')
+                  ->references('id')->on('facturas')
+                  ->onDelete('cascade');
+        });
     }
 
     /**
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+       Schema::dropIfExists('contrasenas_pagos');
     }
 };

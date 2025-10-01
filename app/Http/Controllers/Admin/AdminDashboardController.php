@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ContrasenaPago;
 use App\Models\User;
 use App\Models\Cotizacion;
 use App\Models\OrdenCompra;
@@ -23,6 +24,7 @@ class AdminDashboardController extends Controller
         $totalFactura = Factura::count();
         $totalReporteTrabajo = ReporteTrabajo::count();
         $totalPago = Pago::count();
+        $totalContrasenas = ContrasenaPago::count();
 
         return view('admin.dashboard', compact(
             'role',
@@ -32,6 +34,7 @@ class AdminDashboardController extends Controller
             'totalFactura',
             'totalReporteTrabajo',
             'totalPago',
+            'totalContrasenas',
         ));
     }
 }

@@ -12,7 +12,7 @@
         <thead class="bg-gray-800 text-gray-300 uppercase text-sm">
             <tr>
                 <th class="px-4 py-2">Orden de Compra</th>
-                <th class="px-4 py-2">Número</th>
+                <th class="px-4 py-2">Número de Factura</th>
                 <th class="px-4 py-2">Fecha</th>
                 <th class="px-4 py-2">Monto</th>
                 <th class="px-4 py-2">Acciones</th>
@@ -21,7 +21,10 @@
         <tbody>
             @foreach($facturas as $factura)
                 <tr class="border-t border-gray-700">
-                    <td class="px-4 py-2 text-white">{{ $factura->ordenCompra->id ?? 'N/A' }}</td>
+                    <td class="px-4 py-2 text-white">
+                      {{ $factura->ordenCompra->numero_oc ?? 'N/A' }} - 
+                      Cliente: {{ $factura->ordenCompra->cotizacion->cliente->nombre ?? 'N/A' }}
+                    </td>
                     <td class="px-4 py-2 text-white">{{ $factura->numero_factura }}</td>
                     <td class="px-4 py-2 text-white">{{ $factura->fecha_emision }}</td>
                     <td class="px-4 py-2 text-white">Q{{ number_format($factura->monto_total, 2) }}</td>

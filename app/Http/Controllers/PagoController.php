@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pago;
+use App\Models\Factura;
 use Illuminate\Http\Request;
 
 class PagoController extends Controller
@@ -11,7 +13,8 @@ class PagoController extends Controller
      */
     public function index()
     {
-        //
+        $pagos = Pago::with('factura')->latest()->paginate(10);
+        return view('pagos.index', compact('pagos'));
     }
 
     /**
@@ -19,7 +22,8 @@ class PagoController extends Controller
      */
     public function create()
     {
-        //
+        $facturas = Factura::all();
+        return view('pagos.create', compact('facturas'));
     }
 
     /**
@@ -27,38 +31,69 @@ class PagoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'factura_id' => 'required|exists:facturas,id',
+            'estado'     => 'required|in:pendiente,pagado',
+            'fecha_pago' => 'nullable|date',
+        ]);
+
+        // Si se marca como pagado y no hay fecha, asignar hoy
+        if ($request->estado === 'pagado' && !$request->fecha_pago) {
+            $request->merge(['fecha_pago' => now()]);
+        }
+
+        Pago::create($request->all());
+
+        return redirect()->route('pagos.index')->with('success', 'Pago registrado correctamente.');
+  
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Pago $pago)
     {
-        //
+        // Cargar también las relaciones necesarias
+        $pago->load('factura.ordenCompra.cotizacion.cliente');
+
+        return view('pagos.show', compact('pago'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Pago $pago)
     {
-        //
+        $facturas = Factura::all();
+        return view('pagos.edit', compact('pago', 'facturas'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Pago $pago)
     {
-        //
+        $request->validate([
+            'estado'     => 'required|in:pendiente,pagado',
+            'fecha_pago' => 'nullable|date',
+        ]);
+
+        if ($request->estado === 'pagado' && !$request->fecha_pago) {
+            $request->merge(['fecha_pago' => now()]);
+        }
+
+        $pago->update($request->all());
+
+        return redirect()->route('pagos.index')->with('success', 'Pago actualizado correctamente.');
+    
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Pago $pago)
     {
-        //
+        $pago->delete();
+        return redirect()->route('pagos.index')->with('success', 'Pago eliminado.');
     }
 }

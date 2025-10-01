@@ -16,7 +16,6 @@ return new class extends Migration
         $table->unsignedBigInteger('factura_id');
         $table->enum('estado', ['pendiente', 'pagada'])->default('pendiente');
         $table->date('fecha_pago')->nullable();
-        $table->string('metodo_pago')->nullable();
         $table->timestamps();
 
         $table->foreign('factura_id')->references('id')->on('facturas')->onDelete('cascade');
