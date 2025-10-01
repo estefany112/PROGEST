@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('contrasenas_pago', function (Blueprint $table) {
-             $table->date('fecha_aprox')->nullable()->after('fecha_documento');
-        });
+        if (Schema::hasTable('contrasenas_pago') && !Schema::hasColumn('contrasenas_pago', 'fecha_aprox')) {
+            Schema::table('contrasenas_pago', function (Blueprint $table) {
+                $table->date('fecha_aprox')->nullable()->after('fecha_documento');
+            });
+        }
     }
 
     /**
