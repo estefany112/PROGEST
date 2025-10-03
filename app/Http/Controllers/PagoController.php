@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pago;
 use App\Models\Factura;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PagoController extends Controller
 {
@@ -13,7 +14,17 @@ class PagoController extends Controller
      */
     public function index()
     {
-        $pagos = Pago::with('factura')->latest()->paginate(10);
+       if (Auth::user()->role === 'asistente') {
+        $pagos = Pago::where('creada_por', Auth::id())
+            ->with('factura.ordenCompra.cotizacion.cliente')
+            ->latest()
+            ->paginate(10);
+        } else {
+            $pagos = Pago::with('factura.ordenCompra.cotizacion.cliente')
+                ->latest()
+                ->paginate(10);
+        }
+
         return view('pagos.index', compact('pagos'));
     }
 
