@@ -10,10 +10,7 @@
        <!-- Fecha del documento -->
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-200 mb-2">Fecha del Documento *</label>
-            <input type="date" name="fecha_documento" 
-                value="{{ old('fecha_documento', now()->format('Y-m-d')) }}"
-                required
-                class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md">
+            <input type="date" name="fecha_documento" value="{{ old('fecha_documento', now()->format('Y-m-d')) }}" required class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md">
         </div>
 
         <!-- Factura -->
