@@ -11,26 +11,66 @@
     <div class="grid md:grid-cols-4 gap-6 mb-10">
         <!-- Cotizaciones -->
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
-            <p class="text-sm text-gray-400 uppercase">Cotizaciones</p>
-            <h2 class="text-2xl font-bold text-white">{{ $totalCotizaciones }}</h2>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-400 uppercase">Cotizaciones</p>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalCotizaciones }}</h2>
+                </div>
+                <div class="bg-green-600 text-white p-2 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path d="M12 4v16m8-8H4" />
+                    </svg>
+                </div>
+            </div>
         </div>
 
         <!-- Órdenes de Compra -->
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
-            <p class="text-sm text-gray-400 uppercase">Órdenes de Compra</p>
-            <h2 class="text-2xl font-bold text-white">{{ $totalOrdenesCompra }}</h2>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-400 uppercase">Órdenes de Compra</p>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalOrdenesCompra }}</h2>
+                </div>
+                <div class="bg-yellow-500 text-white p-2 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path d="M9 12h6m2 6H7a2 2 0 01-2-2V8a2 2 0 012-2h4l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+            </div>
         </div>
 
         <!-- Facturas -->
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
-            <p class="text-sm text-gray-400 uppercase">Facturas</p>
-            <h2 class="text-2xl font-bold text-white">{{ $totalFacturas }}</h2>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-400 uppercase">Facturas</p>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalFacturas }}</h2>
+                </div>
+                <div class="bg-purple-600 text-white p-2 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path d="M12 8v8m0 0l-3-3m3 3l3-3M20 12A8 8 0 104 12a8 8 0 0016 0z" />
+                    </svg>
+                </div>
+            </div>
         </div>
 
         <!-- Reportes -->
         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow hover:shadow-xl transition">
-            <p class="text-sm text-gray-400 uppercase">Reportes</p>
-            <h2 class="text-2xl font-bold text-white">{{ $totalReportes }}</h2>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-400 uppercase">Reportes</p>
+                    <h2 class="text-2xl font-bold text-white">{{ $totalReportes }}</h2>
+                </div>
+                <div class="bg-blue-600 text-white p-2 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path d="M17 20h5V4H2v16h5m5-16v16" />
+                    </svg>
+                </div>
+            </div>
         </div>
     </div>
 
