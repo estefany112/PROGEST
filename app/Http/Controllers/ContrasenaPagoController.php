@@ -31,8 +31,6 @@ class ContrasenaPagoController extends Controller
      */
     public function store(Request $request)
     {
-
-        dd($request->all());
         $request->validate([
             'factura_id' => 'required|exists:facturas,id',
             'codigo'     => 'required|string|max:255',

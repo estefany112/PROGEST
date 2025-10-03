@@ -15,6 +15,7 @@ class ContrasenaPago extends Model
         'validada_en',
         'archivo',
         'fecha_aprox',
+        'fecha_documento',
     ];
 
     public function factura()
