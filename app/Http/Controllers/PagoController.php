@@ -42,7 +42,12 @@ class PagoController extends Controller
             $request->merge(['fecha_pago' => now()]);
         }
 
-        Pago::create($request->all());
+       Pago::create([
+        'factura_id' => $request->factura_id,
+        'estado'     => $request->estado,
+        'fecha_pago' => $request->fecha_pago,
+        'creada_por' => Auth::id(),
+    ]);
 
         return redirect()->route('pagos.index')->with('success', 'Pago registrado correctamente.');
   

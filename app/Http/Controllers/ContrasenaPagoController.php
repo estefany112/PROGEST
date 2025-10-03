@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ContrasenaPago;
 use App\Models\Factura;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ContrasenaPagoController extends Controller
 {
@@ -50,6 +51,7 @@ class ContrasenaPagoController extends Controller
             'fecha_documento' => $request->fecha_documento,
             'archivo'    => $archivoPath,
             'fecha_aprox'=> $request->fecha_aprox,
+            'creada_por' => Auth::id(),
         ]);
 
         return redirect()->route('contrasenas.index')->with('success', 'Contraseña registrada correctamente.');

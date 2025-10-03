@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ReporteTrabajo;
 use App\Models\OrdenCompra;
+use Illuminate\Support\Facades\Auth;
 
 class ReporteTrabajoController extends Controller
 {
@@ -31,7 +32,8 @@ class ReporteTrabajoController extends Controller
 
         ReporteTrabajo::create([
             'orden_compra_id' => $request->orden_compra_id,
-            'archivo' => $path
+            'archivo' => $path,
+            'creada_por'      => Auth::id(),
         ]);
 
         return redirect()->route('reportes-trabajo.index')

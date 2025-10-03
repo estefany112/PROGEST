@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Cliente;
 use App\Models\Cotizacion;
 use App\Models\OrdenCompra;
+use App\Models\Factura;
+use App\Models\ReporteTrabajo;
 use Illuminate\Support\Facades\Auth;
 
 class AsistenteDashboardController extends Controller
@@ -17,13 +19,19 @@ class AsistenteDashboardController extends Controller
 
         $totalClientes = Cliente::count();
         $totalCotizaciones = Cotizacion::where('creada_por', $user->id)->count();
-       $totalOrdenesCompra = OrdenCompra::where('creada_por', $user->id)->count();
+        $totalOrdenesCompra = OrdenCompra::where('creada_por', $user->id)->count();
+        $totalFacturas = Factura::where('creada_por', $user->id)->count();
+        $totalReportes = ReporteTrabajo::where('creada_por', $user->id)->count();
+       
 
         return view('asistente.dashboard', compact(
             'role', 
             'totalClientes',
             'totalCotizaciones',
-            'totalOrdenesCompra'
+            'totalOrdenesCompra',
+            'totalFacturas',
+            'totalReportes'
+            
         ));
     }
 }

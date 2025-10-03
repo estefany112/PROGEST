@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrdenCompra extends Model
 {
@@ -20,6 +21,7 @@ class OrdenCompra extends Model
         'fecha',
         'monto_total',
         'archivo_oc_path',
+        'creada_por',
     ];
 
     // 👇 Relación con Cotizacion (cada orden pertenece a una cotización)
@@ -46,6 +48,11 @@ class OrdenCompra extends Model
     public function getArchivoUrlAttribute()
     {
         return $this->archivo ? Storage::url($this->archivo) : null;
+    }
+
+    public function creadaPor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'creada_por');
     }
 
 }

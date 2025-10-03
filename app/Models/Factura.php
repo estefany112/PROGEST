@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 
 class Factura extends Model
 {
@@ -13,7 +15,8 @@ class Factura extends Model
         'numero_factura', 
         'fecha_emision', 
         'monto_total', 
-        'archivo_pdf_path'
+        'archivo_pdf_path',
+        'creada_por'
     ];
 
     public function ordenCompra()
@@ -33,12 +36,17 @@ class Factura extends Model
 
     public function contraseñaPago()
     {
-        return $this->hasOne(ContraseñaPago::class);
+        return $this->hasOne(ContrasenaPago::class);
     }
 
     public function getArchivoPdfUrlAttribute()
     {
         return $this->archivo_pdf_path ? Storage::url($this->archivo_pdf_path) : null;
+    }
+
+    public function creadaPor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'creada_por');
     }
 }
 

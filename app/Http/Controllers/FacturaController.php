@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Factura;
 use App\Models\OrdenCompra;
+use Illuminate\Support\Facades\Auth;
 
 class FacturaController extends Controller
 {
@@ -56,6 +57,7 @@ class FacturaController extends Controller
             'numero_factura'  => $request->numero_factura,
             'fecha_emision'   => $request->fecha_emision,
             'monto_total'     => $request->monto_total,
+            'creada_por' => Auth::id(),
         ];
 
         if ($request->hasFile('archivo_pdf_path')) {
