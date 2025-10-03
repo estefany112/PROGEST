@@ -38,7 +38,7 @@
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="{{ route('login') }}">Login</a></li>
-          <li><<a href="{{ route('register') }}" class="text-blue-600 hover:underline">Regístrate aquí</a></li>
+          <li><a href="{{ route('register') }}" class="text-blue-600 hover:underline">Regístrate aquí</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
