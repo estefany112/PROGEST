@@ -14,17 +14,27 @@ class ContrasenaPagoController extends Controller
      */
     public function index()
     {
-        $contrasenas = ContrasenaPago::with('factura.ordenCompra.cotizacion.cliente')->latest()->paginate(10);
-        return view('contrasenas.index', compact('contrasenas'));
-    }
+        if (Auth::user()->role === 'asistente') {
+                $contrasenas = ContrasenaPago::where('creada_por', Auth::id())
+                    ->with('factura.ordenCompra.cotizacion.cliente')
+                    ->latest()
+                    ->paginate(10);
+            } else {
+                $contrasenas = ContrasenaPago::with('factura.ordenCompra.cotizacion.cliente')
+                    ->latest()
+                    ->paginate(10);
+            }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $facturas = Factura::all();
-        return view('contrasenas.create', compact('facturas'));
+            return view('contrasenas.index', compact('contrasenas'));
+            }
+
+            /**
+             * Show the form for creating a new resource.
+             */
+            public function create()
+            {
+                $facturas = Factura::all();
+                return view('contrasenas.create', compact('facturas'));
     }
 
     /**
