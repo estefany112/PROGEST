@@ -14,7 +14,7 @@ class ContrasenaPagoController extends Controller
     public function index()
     {
         $contrasenas = ContrasenaPago::with('factura.ordenCompra.cotizacion.cliente')->latest()->paginate(10);
-        dd($contrasenas->toArray());
+        dd($contrasenas->first()->toArray());
         return view('contrasenas.index', compact('contrasenas'));
     }
 
