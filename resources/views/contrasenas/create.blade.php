@@ -7,12 +7,13 @@
     <form action="{{ route('contrasenas.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
-        <!-- Fecha -->
+       <!-- Fecha del documento -->
         <div class="mb-4">
-            <label class="block text-gray-300 mb-2">Fecha Documento:</label>
-            <input type="date" name="fecha_documento"
-                value="{{ old('fecha_documento', $contrasena->fecha_documento ?? now()->format('Y-m-d')) }}"
-                class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+            <label class="block text-sm font-medium text-gray-200 mb-2">Fecha del Documento *</label>
+            <input type="date" name="fecha_documento" 
+                value="{{ old('fecha_documento', now()->format('Y-m-d')) }}"
+                required
+                class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md">
         </div>
 
         <!-- Factura -->
