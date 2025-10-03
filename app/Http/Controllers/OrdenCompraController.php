@@ -11,7 +11,19 @@ class OrdenCompraController extends Controller
 {
     public function index()
     {
-        $ordenes = OrdenCompra::with('cotizacion')->latest()->paginate(10);
+        if (Auth::user()->role === 'asistente') {
+            // Solo las órdenes que el asistente creó
+            $ordenes = OrdenCompra::with('cotizacion')
+                ->where('creada_por', Auth::id())
+                ->latest()
+                ->paginate(10);
+        } else {
+            // Admin ve todas
+            $ordenes = OrdenCompra::with('cotizacion')
+                ->latest()
+                ->paginate(10);
+        }
+
         return view('ordenes_compra.index', compact('ordenes'));
     }
 
