@@ -47,7 +47,7 @@ class ContrasenaPagoController extends Controller
         ContrasenaPago::create([
             'factura_id' => $request->factura_id,
             'codigo'     => $request->codigo,
-            'fecha_documento' => $request->fecha_documento,
+            'fecha_documento' => $request->fecha_documento ?? now()->toDateString(),
             'archivo'    => $archivoPath,
             'fecha_aprox'=> $request->fecha_aprox,
         ]);
