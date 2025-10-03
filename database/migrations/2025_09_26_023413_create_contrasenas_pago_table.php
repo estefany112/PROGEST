@@ -17,12 +17,11 @@ return new class extends Migration
                 $table->unsignedBigInteger('factura_id');
                 $table->string('codigo');
                 $table->string('archivo')->nullable();
-                $table->date('fecha_documento');
+                $table->date('fecha_documento')->nullable();
                 $table->date('fecha_aprox')->nullable();
                 $table->enum('estado', ['pendiente', 'validada'])->default('pendiente');
                 $table->timestamp('validada_en')->nullable();
                 $table->timestamps();
-
                 $table->foreign('factura_id')->references('id')->on('facturas')->onDelete('cascade');
             });
         }

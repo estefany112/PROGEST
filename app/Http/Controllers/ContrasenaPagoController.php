@@ -83,7 +83,7 @@ class ContrasenaPagoController extends Controller
 
         $contrasena->codigo = $request->codigo;
         $contrasena->estado = $request->estado;
-        $contrasena->fecha_documento = $request->fecha_documento;
+        $contrasena->fecha_documento = $request->fecha_documento ?? $contrasena->fecha_documento ?? now()->toDateString();
         $contrasena->fecha_aprox = $request->fecha_aprox;
         if ($request->estado === 'validada' && !$contrasena->validada_en) {
             $contrasena->validada_en = now();
