@@ -24,7 +24,10 @@ class CotizacionController extends Controller
         // 🔹 Admin ve todas, asistente solo las suyas
         if ($user->tipo === 'asistente') {
             $query->where('creada_por', $user->id);
-        }
+        } elseif ($user->tipo === 'admin') {
+        // El admin ve todas menos las que estén en borrador
+        $query->where('estado', '!=', 'borrador');
+}
 
         // 🔹 Si el filtro de estado está activo
         if ($request->filled('estado')) {

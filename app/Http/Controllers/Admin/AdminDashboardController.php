@@ -19,7 +19,7 @@ class AdminDashboardController extends Controller
 
         // Contadores globales
         $totalUsuarios     = User::count();
-        $totalCotizaciones = Cotizacion::count();
+        $totalCotizaciones = Cotizacion::visiblePara(auth()->user())->count();
         $totalOrdenesCompra = OrdenCompra::count();
         $totalFactura = Factura::count();
         $totalReporteTrabajo = ReporteTrabajo::count();

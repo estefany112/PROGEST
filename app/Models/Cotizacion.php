@@ -146,7 +146,20 @@ class Cotizacion extends Model
      * Relación con el cliente
      */
     public function cliente()
-        {
-            return $this->belongsTo(\App\Models\Cliente::class, 'cliente_id');
+    {
+        return $this->belongsTo(\App\Models\Cliente::class, 'cliente_id');
+    }
+
+    // Función para que no muestre las cotizaciones en borrador
+    public function scopeVisiblePara($query, $user)
+    {
+        if ($user->tipo === 'asistente') {
+            return $query->where('creada_por', $user->id);
+        } elseif ($user->tipo === 'admin') {
+            return $query->where('estado', '!=', 'borrador');
         }
+
+        return $query;
+    }
+
 } 
