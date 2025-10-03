@@ -14,7 +14,6 @@ class ContrasenaPagoController extends Controller
     public function index()
     {
         $contrasenas = ContrasenaPago::with('factura.ordenCompra.cotizacion.cliente')->latest()->paginate(10);
-        dd($contrasenas->first()->toArray());
         return view('contrasenas.index', compact('contrasenas'));
     }
 
@@ -32,7 +31,6 @@ class ContrasenaPagoController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         $request->validate([
             'factura_id' => 'required|exists:facturas,id',
             'codigo'     => 'required|string|max:255',
