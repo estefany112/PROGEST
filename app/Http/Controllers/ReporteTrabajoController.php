@@ -11,7 +11,17 @@ class ReporteTrabajoController extends Controller
 {
     public function index()
     {
-        $reportes = ReporteTrabajo::with('ordenCompra')->latest()->paginate(10);
+       if (Auth::user()->role === 'asistente') {
+        $reportes = ReporteTrabajo::with('ordenCompra')
+            ->where('creado_por', Auth::id())
+            ->latest()
+            ->paginate(10);
+    } else {
+        $reportes = ReporteTrabajo::with('ordenCompra')
+            ->latest()
+            ->paginate(10);
+    }
+
         return view('reportes.index', compact('reportes'));
     }
 

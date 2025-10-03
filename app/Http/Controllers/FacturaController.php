@@ -14,9 +14,16 @@ class FacturaController extends Controller
      */
     public function index()
     {
-        $facturas = Factura::with(['ordenCompra.cotizacion.cliente'])
+        if (Auth::user()->role === 'asistente') {
+        $facturas = Factura::where('creada_por', Auth::id())
+            ->with('ordenCompra.cotizacion.cliente')
             ->latest()
             ->paginate(10);
+    } else {
+        $facturas = Factura::with('ordenCompra.cotizacion.cliente')
+            ->latest()
+            ->paginate(10);
+    }
 
         return view('facturas.index', compact('facturas'));
     }
