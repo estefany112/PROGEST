@@ -20,11 +20,12 @@
 
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-gray-800 shadow border-b border-gray-700"> {{-- 👈 FONDO Y BORDE OSCURO --}}
+                <header class="bg-[#0f172a] border-b border-gray-700 shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
+
             @endisset
 
             <!-- Page Content -->
