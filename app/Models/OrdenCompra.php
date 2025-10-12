@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Cotizacion;
+use App\Models\User;
 
 class OrdenCompra extends Model
 {
@@ -22,6 +24,7 @@ class OrdenCompra extends Model
         'monto_total',
         'archivo_oc_path',
         'creada_por',
+        'status',
     ];
 
     // 👇 Relación con Cotizacion (cada orden pertenece a una cotización)
@@ -55,4 +58,50 @@ class OrdenCompra extends Model
         return $this->belongsTo(User::class, 'creada_por');
     }
 
+    /**
+     * ===========================
+     * MÉTODOS DE ESTADO
+     * ===========================
+     */
+
+    public function isBorrador()
+    {
+        return $this->status === 'borrador';
+    }
+
+    public function isEnRevision()
+    {
+        return $this->status === 'revision';
+    }
+
+    public function isAprobado()
+    {
+        return $this->status === 'aprobado';
+    }
+
+    public function isRechazado()
+    {
+        return $this->status === 'rechazado';
+    }
+
+    /**
+     * ===========================
+     * SCOPES (para filtrar por rol o estado)
+     * ===========================
+     */
+
+    public function scopeVisiblesPara($query, $user)
+    {
+        if ($user->role === 'asistente') {
+            // Solo ve las suyas
+            return $query->where('creada_por', $user->id);
+        }
+
+        if ($user->role === 'admin') {
+            // Solo ve las que están en revisión o aprobadas
+            return $query->whereIn('status', ['revision', 'aprobado']);
+        }
+
+        return $query;
+    }
 }

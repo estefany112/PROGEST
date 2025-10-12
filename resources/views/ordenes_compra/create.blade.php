@@ -12,20 +12,39 @@
         </div>
     </div>
 
-    <div class="bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg">
+    <div class="bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg border border-gray-800">
         <div class="p-6 text-gray-100">
+            
+            {{-- ⚡ Mensajes de error --}}
+            @if ($errors->any())
+                <div class="bg-red-600 text-white p-3 mb-4 rounded">
+                    <ul class="list-disc list-inside text-sm">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            {{-- ⚡ Mensaje de éxito --}}
+            @if (session('success'))
+                <div class="bg-green-600 text-white p-3 mb-4 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <form action="{{ route('ordenes-compra.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <!-- Selección de Cotización -->
+                <!-- Cotización aprobada -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-200 mb-2">Cotización aprobada *</label>
                     <select name="cotizacion_id" required
-                            class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">-- Selecciona una cotización --</option>
+                            class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md focus:ring-2 focus:ring-blue-500">
+                        <option value="">-- Selecciona una cotización aprobada --</option>
                         @foreach($cotizaciones as $c)
                             <option value="{{ $c->id }}" {{ old('cotizacion_id') == $c->id ? 'selected' : '' }}>
-                                Folio: {{ $c->folio }} - Cliente: {{ $c->cliente_nombre }}
+                                Folio: {{ $c->folio }} — Cliente: {{ $c->cliente_nombre }}
                             </option>
                         @endforeach
                     </select>
@@ -54,7 +73,7 @@
                     @enderror
                 </div>
 
-                <!-- Monto -->
+                <!-- Monto total -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-200 mb-2">Monto Total *</label>
                     <input type="number" step="0.01" name="monto_total" value="{{ old('monto_total') }}" required
@@ -67,11 +86,19 @@
                 <!-- Archivo -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-200 mb-2">Archivo OC (opcional)</label>
-                    <input type="file" name="archivo_oc_path" 
+                    <input type="file" name="archivo_oc_path"
                            class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-gray-100 rounded-md">
                     @error('archivo_oc_path')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <!-- Estado inicial -->
+                <div class="mb-6">
+                    <p class="text-sm text-gray-400 italic">
+                        🔹 La orden se creará en estado <strong>borrador</strong>.  
+                        Luego podrás enviarla a revisión para que el administrador la apruebe.
+                    </p>
                 </div>
 
                 <!-- Botones -->
@@ -81,8 +108,8 @@
                         Cancelar
                     </a>
                     <button type="submit" 
-                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                        Guardar Orden
+                            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                        Guardar como Borrador
                     </button>
                 </div>
             </form>

@@ -158,21 +158,22 @@
         <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
             <h3 class="text-xl font-semibold text-white mb-2">Órdenes de Compra</h3>
             <p class="text-gray-400 mb-4">Genera órdenes desde cotizaciones aprobadas.</p>
-            <a href="{{ route('ordenes-compra.index') }}" class="text-green-400 hover:text-green-300 font-medium">Ver órdenes →</a>
+            <a href="{{ route('ordenes-compra.create') }}" class="text-green-400 hover:text-green-300 font-medium">Nueva Orden de Compra →</a>
+            <a href="{{ route('ordenes-compra.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver órdenes →</a>
         </div>
 
+         <!-- Reportes -->
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
+            <h3 class="text-xl font-semibold text-white mb-2">Reportes</h3>
+            <p class="text-gray-400 mb-4">Adjunta reportes de servicios finalizados.</p>
+            <a href="{{ route('reportes-trabajo.create') }}" class="text-green-400 hover:text-green-300 font-medium">Subir reporte →</a>
+        </div>
+        
         <!-- Facturas -->
         <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
             <h3 class="text-xl font-semibold text-white mb-2">Facturas</h3>
             <p class="text-gray-400 mb-4">Sube facturas externas emitidas por clientes.</p>
             <a href="{{ route('facturas.create') }}" class="text-blue-400 hover:text-blue-300 font-medium">Subir factura →</a>
-        </div>
-
-        <!-- Reportes -->
-        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
-            <h3 class="text-xl font-semibold text-white mb-2">Reportes</h3>
-            <p class="text-gray-400 mb-4">Adjunta reportes de servicios finalizados.</p>
-            <a href="{{ route('reportes-trabajo.create') }}" class="text-green-400 hover:text-green-300 font-medium">Subir reporte →</a>
         </div>
 
         <!-- Contraseñas de Pago -->

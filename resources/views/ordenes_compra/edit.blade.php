@@ -8,7 +8,7 @@
         </h1>
     </div>
 
-    <div class="bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg">
+    <div class="bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg border border-gray-800">
         <div class="p-6 text-gray-100">
 
             {{-- ⚡ Mensajes de error globales --}}
@@ -29,11 +29,21 @@
                 </div>
             @endif
 
+            {{-- 🧠 Validación de estado editable --}}
+            @if($orden->status !== 'borrador' && Auth::user()->role === 'asistente')
+                <div class="bg-yellow-800 border border-yellow-700 text-yellow-200 p-4 rounded mb-6">
+                    ⚠️ Esta orden está en estado <strong>{{ ucfirst($orden->status) }}</strong> 
+                    y ya no puede modificarse. Solo se pueden editar las órdenes en estado <strong>borrador</strong>.
+                </div>
+            @endif
+
+            {{-- Formulario solo editable si cumple condiciones --}}
+            @if(Auth::user()->role === 'admin' || $orden->status === 'borrador')
             <form action="{{ route('ordenes-compra.update', $orden) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
-                <!-- Selección de Cotización -->
+                <!-- Cotización -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-200 mb-2">Cotización vinculada *</label>
                     <select name="cotizacion_id" required
@@ -106,6 +116,11 @@
                     </button>
                 </div>
             </form>
+            @else
+                <div class="text-gray-400 text-sm italic mt-4">
+                    No tienes permiso para editar esta orden o ya no está en estado borrador.
+                </div>
+            @endif
         </div>
     </div>
 </div>

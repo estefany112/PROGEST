@@ -72,6 +72,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/ordenes-compra/{orden}/edit', [OrdenCompraController::class, 'edit'])->name('ordenes-compra.edit'); 
         Route::put('/ordenes-compra/{orden}', [OrdenCompraController::class, 'update'])->name('ordenes-compra.update'); 
         Route::delete('/ordenes-compra/{orden}', [OrdenCompraController::class, 'destroy'])->name('ordenes-compra.destroy'); 
+        Route::patch('ordenes-compra/{id}/enviar-revision', [OrdenCompraController::class, 'enviarRevision'])->name('ordenes-compra.enviarRevision');
+        Route::patch('ordenes-compra/{id}/cambiar-estado', [OrdenCompraController::class, 'cambiarEstado'])->name('ordenes-compra.cambiarEstado');
+
 
         // REPORTES DE TRABAJO
         Route::resource('reportes-trabajo', ReporteTrabajoController::class);
