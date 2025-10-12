@@ -17,9 +17,11 @@
                     <h2 class="text-2xl font-bold text-white">{{ $totalUsuarios }}</h2>
                 </div>
                 <div class="bg-blue-600 text-white p-2 rounded-full">
+                    <!-- Icono de Usuario -->
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
-                        <path d="M17 20h5V4H2v16h5m5-16v16" />
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M5.121 17.804A9 9 0 0112 15a9 9 0 016.879 2.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                 </div>
             </div>
@@ -32,10 +34,13 @@
                     <p class="text-sm text-gray-400 uppercase">Cotizaciones</p>
                     <h2 class="text-2xl font-bold text-white">{{ $totalCotizaciones }}</h2>
                 </div>
-                <div class="bg-green-600 text-white p-2 rounded-full">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
-                        <path d="M12 4v16m8-8H4" />
+                <div class="bg-indigo-600 text-white p-2 rounded-full">
+                   <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 10h6m-6 4h6" />
                     </svg>
                 </div>
             </div>
@@ -48,10 +53,11 @@
                     <p class="text-sm text-gray-400 uppercase">Órdenes de Compra</p>
                     <h2 class="text-2xl font-bold text-white">{{ $totalOrdenesCompra }}</h2>
                 </div>
-                <div class="bg-yellow-500 text-white p-2 rounded-full">
+                <div class="bg-gray-500 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
-                        <path d="M9 12h6m2 6H7a2 2 0 01-2-2V8a2 2 0 012-2h4l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2z"/>
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12l2 2l4-4m2-6H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V8l-4-4z" />
                     </svg>
                 </div>
             </div>
@@ -96,10 +102,16 @@
                     <p class="text-sm text-gray-400 uppercase">Contraseñas de Pago</p>
                     <h2 class="text-2xl font-bold text-white">{{ $totalContrasenas }}</h2>
                 </div>
-                <div class="bg-purple-600 text-white p-2 rounded-full">
+                <div class="bg-red-600 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
-                        <path d="M12 8v8m0 0l-3-3m3 3l3-3M20 12A8 8 0 104 12a8 8 0 0016 0z" />
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Cuerpo del candado -->
+                    <rect x="5" y="11" width="14" height="10" rx="2" ry="2" />
+                    <!-- Arco superior -->
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8 11V7a4 4 0 018 0v4" />
+                    <!-- Detalle de cerradura -->
+                    <circle cx="12" cy="16" r="1.5" />
                     </svg>
                 </div>
             </div>
@@ -112,10 +124,12 @@
                     <p class="text-sm text-gray-400 uppercase">Pagos</p>
                     <h2 class="text-2xl font-bold text-white">{{ $totalPago}}</h2>
                 </div>
-                <div class="bg-purple-600 text-white p-2 rounded-full">
+                <div class="bg-green-600 text-white p-2 rounded-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
-                        <path d="M12 8v8m0 0l-3-3m3 3l3-3M20 12A8 8 0 104 12a8 8 0 0016 0z" />
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="6" width="18" height="12" rx="2" ry="2" />
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                 </div>
             </div>

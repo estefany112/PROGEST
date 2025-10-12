@@ -17,13 +17,13 @@
 
                 <div>
                     <label for="email" class="block text-sm font-semibold mb-1">Correo Electrónico</label>
-                    <input type="email" id="email" name="email" placeholder="Enter username" required autofocus
+                    <input type="email" id="email" name="email" placeholder="Ingrese Correo Electrónico" required autofocus
                         class="w-full border-b border-gray-300 focus:outline-none focus:border-gray-600 text-sm py-1.5" />
                 </div>
 
                 <div>
                     <label for="password" class="block text-sm font-semibold mb-1">Contraseña</label>
-                    <input type="password" id="password" name="password" placeholder="Enter password" required
+                    <input type="password" id="password" name="password" placeholder="Ingrese Contraseña" required
                         class="w-full border-b border-gray-300 focus:outline-none focus:border-gray-600 text-sm py-1.5" />
                 </div>
 

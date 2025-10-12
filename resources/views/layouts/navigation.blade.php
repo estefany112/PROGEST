@@ -12,7 +12,7 @@
             <!-- Nav links -->
             <div class="hidden sm:flex space-x-6">
                 <a href="{{ route(Auth::user()->getRoleNames()->first() . '.dashboard') }}"
-                   class="text-sm text-gray-300 hover:text-blue-400 font-medium transition">Dashboard</a>
+                   class="text-sm text-gray-300 hover:text-blue-400 font-medium transition">Panel de {{ Auth::user()->getRoleNames()->first() }}</a>
             </div>
 
             <!-- User menu -->
