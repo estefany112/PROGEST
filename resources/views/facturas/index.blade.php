@@ -2,45 +2,181 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-10 px-6">
-    <h1 class="text-2xl font-bold mb-6 text-white">Facturas</h1>
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-bold text-gray-100">Facturas</h1>
 
-    <a href="{{ route('facturas.create') }}" class="bg-purple-600 hover:bg-purple-800 text-white px-4 py-2 rounded mb-4 inline-block">
-        Nueva Factura
-    </a>
+        {{-- Asistente puede crear facturas --}}
+        @role('asistente')
+            <a href="{{ route('facturas.create') }}" 
+               class="bg-purple-600 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded flex items-center">
+                <i class="fas fa-plus mr-2"></i> Nueva Factura
+            </a>
+        @endrole
+    </div>
 
-    <table class="w-full bg-gray-900 rounded shadow">
-        <thead class="bg-gray-800 text-gray-300 uppercase text-sm">
-            <tr>
-                <th class="px-4 py-2">Orden de Compra</th>
-                <th class="px-4 py-2">Número de Factura</th>
-                <th class="px-4 py-2">Fecha</th>
-                <th class="px-4 py-2">Monto</th>
-                <th class="px-4 py-2">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($facturas as $factura)
-                <tr class="border-t border-gray-700">
-                    <td class="px-4 py-2 text-white">
-                      {{ $factura->ordenCompra->numero_oc ?? 'N/A' }} - 
-                      Cliente: {{ $factura->ordenCompra->cotizacion->cliente->nombre ?? 'N/A' }}
-                    </td>
-                    <td class="px-4 py-2 text-white">{{ $factura->numero_factura }}</td>
-                    <td class="px-4 py-2 text-white">{{ $factura->fecha_emision }}</td>
-                    <td class="px-4 py-2 text-white">Q{{ number_format($factura->monto_total, 2) }}</td>
-                    <td class="px-4 py-2">
-                        <a href="{{ route('facturas.show', $factura) }}" class="text-blue-400">Ver</a> |
-                        <a href="{{ route('facturas.edit', $factura) }}" class="text-yellow-400">Editar</a> |
-                        <form action="{{ route('facturas.destroy', $factura) }}" method="POST" class="inline" onsubmit="return confirm('¿Eliminar esta factura?')">
-                            @csrf @method('DELETE')
-                            <button class="text-red-400">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    {{-- Mensajes Flash --}}
+    @if(session('success'))
+        <div id="alert-message" class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded mb-4 duration-500">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div id="alert-message" class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4 duration-500">
+            {{ session('error') }}
+        </div>
+    @endif
 
-    <div class="mt-4">{{ $facturas->links() }}</div>
+    {{-- Panel informativo según rol --}}
+    @role('admin')
+        <div class="mb-6 p-4 bg-blue-900 border border-blue-700 rounded-lg">
+            <h4 class="text-lg font-medium text-blue-100 mb-2">Panel de Revisión</h4>
+            <p class="text-blue-200">
+                Aquí puedes revisar las facturas enviadas por los asistentes.  
+                Las que estén “En revisión” pueden ser aprobadas o rechazadas.
+            </p>
+        </div>
+    @endrole
+
+    @role('asistente')
+        <div class="mb-6 p-4 bg-purple-900 border border-purple-700 rounded-lg">
+            <h4 class="text-lg font-medium text-purple-100 mb-2">Gestión de Facturas</h4>
+            <p class="text-purple-200">
+                Aquí puedes crear, editar y enviar tus facturas a revisión.  
+                Una vez enviadas, el administrador las validará.
+            </p>
+        </div>
+    @endrole
+
+    <div class="bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 text-gray-100">
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-gray-900 rounded-lg">
+                    <thead class="bg-gray-800">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Orden de Compra</th>
+                            <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">N° Factura</th>
+                            <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Fecha</th>
+                            <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Monto</th>
+                            @role('asistente')
+                                <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Revisado por</th>
+                            @endrole
+                            <th class="px-6 py-3 text-center text-sm text-gray-300 uppercase">Acciones</th>
+                            @role('admin')
+                                <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Creada por</th>
+                            @endrole
+                            <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Estado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="bg-gray-900 divide-y divide-gray-800">
+                        @forelse($facturas as $factura)
+                            <tr class="hover:bg-gray-800 transition">
+                                <td class="px-6 py-4 text-white">
+                                    {{ $factura->ordenCompra->numero_oc ?? 'N/A' }}<br>
+                                    <span class="text-sm text-gray-400">
+                                        Cliente: {{ $factura->ordenCompra->cotizacion->cliente_nombre ?? 'N/A' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-white">{{ $factura->numero_factura }}</td>
+                                <td class="px-6 py-4 text-white">{{ \Carbon\Carbon::parse($factura->fecha_emision)->format('d/m/Y') }}</td>
+                                <td class="px-6 py-4 text-white">Q{{ number_format($factura->monto_total, 2) }}</td>
+
+                                {{-- Revisado por (solo asistente) --}}
+                                @role('asistente')
+                                    <td class="px-6 py-4 text-gray-300">
+                                        {{ $factura->revisadoPor->name ?? '—' }}
+                                    </td>
+                                @endrole
+
+                                <td class="px-6 py-4 text-sm font-medium">
+                                    <div class="flex flex-wrap justify-center gap-2 items-center">
+
+                                        {{-- Select de estado --}}
+                                        <form action="{{ route('facturas.cambiarEstado', $factura->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            @role('admin')
+                                                <select name="status" class="px-2 py-1 border border-gray-700 bg-gray-900 text-gray-100 rounded-md text-xs">
+                                                    <option value="revision" {{ $factura->status == 'revision' ? 'selected' : '' }}>En Revisión</option>
+                                                    <option value="aprobado" {{ $factura->status == 'aprobado' ? 'selected' : '' }}>Aprobado</option>
+                                                    <option value="rechazado" {{ $factura->status == 'rechazado' ? 'selected' : '' }}>Rechazado</option>
+                                                </select>
+                                            @endrole
+
+                                            @role('asistente')
+                                                <select name="status" class="px-2 py-1 border border-gray-700 bg-gray-900 text-gray-100 rounded-md text-xs">
+                                                    <option value="borrador" {{ $factura->status == 'borrador' ? 'selected' : '' }}>Borrador</option>
+                                                    <option value="revision" {{ $factura->status == 'revision' ? 'selected' : '' }}>Enviar a Revisión</option>
+                                                </select>
+                                            @endrole
+
+                                            <button type="submit" class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-1 px-3 rounded text-xs ml-2">
+                                                Actualizar
+                                            </button>
+                                        </form>
+
+                                        {{-- Botones --}}
+                                        <a href="{{ route('facturas.show', $factura) }}" 
+                                           class="bg-gray-600 hover:bg-gray-800 text-white font-bold py-1 px-3 rounded text-xs">Ver</a>
+
+                                        <a href="{{ route('facturas.edit', $factura) }}" 
+                                           class="bg-yellow-600 hover:bg-yellow-800 text-white font-bold py-1 px-3 rounded text-xs">Editar</a>
+
+                                        @role('admin')
+                                            <form action="{{ route('facturas.destroy', $factura) }}" method="POST" onsubmit="return confirm('¿Eliminar esta factura?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded text-xs">
+                                                    Eliminar
+                                                </button>
+                                            </form>
+                                        @endrole
+                                    </div>
+                                </td>
+
+                                @role('admin')
+                                    <td class="px-6 py-4 text-white">{{ $factura->creadaPor->name ?? 'N/A' }}</td>
+                                @endrole
+
+                                <td class="px-6 py-4">
+                                    <span class="
+                                        @switch($factura->status)
+                                            @case('borrador') text-gray-400 @break
+                                            @case('revision') text-yellow-400 @break
+                                            @case('aprobado') text-green-400 @break
+                                            @case('rechazado') text-red-400 @break
+                                        @endswitch
+                                        font-bold text-base">
+                                        {{ ucfirst($factura->status) }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="px-6 py-4 text-center text-gray-500 bg-gray-900">
+                                    No hay facturas registradas.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4">{{ $facturas->links() }}</div>
+        </div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const alert = document.getElementById("alert-message");
+        if (alert) {
+            setTimeout(() => {
+                alert.style.opacity = "0";
+                setTimeout(() => alert.remove(), 500);
+            }, 2000);
+        }
+    });
+</script>
 @endsection

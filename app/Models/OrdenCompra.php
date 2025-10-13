@@ -25,6 +25,7 @@ class OrdenCompra extends Model
         'archivo_oc_path',
         'creada_por',
         'status',
+        'revisado_por',
     ];
 
     // 👇 Relación con Cotizacion (cada orden pertenece a una cotización)
@@ -56,6 +57,11 @@ class OrdenCompra extends Model
     public function creadaPor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'creada_por');
+    }
+
+    public function revisadoPor()
+    {
+        return $this->belongsTo(User::class, 'revisado_por');
     }
 
     /**

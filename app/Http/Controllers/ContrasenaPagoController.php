@@ -2,125 +2,180 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\ContrasenaPago;
 use App\Models\Factura;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ContrasenaPagoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Listado de contraseñas según rol.
      */
     public function index()
     {
-        if (Auth::user()->role === 'asistente') {
-                $contrasenas = ContrasenaPago::where('creada_por', Auth::id())
-                    ->with('factura.ordenCompra.cotizacion.cliente')
-                    ->latest()
-                    ->paginate(10);
-            } else {
-                $contrasenas = ContrasenaPago::with('factura.ordenCompra.cotizacion.cliente')
-                    ->latest()
-                    ->paginate(10);
-            }
+        $user = Auth::user();
 
-            return view('contrasenas.index', compact('contrasenas'));
-            }
+        $contrasenas = ContrasenaPago::with('factura.ordenCompra.cotizacion.cliente')
+            ->visiblesPara($user)
+            ->latest()
+            ->paginate(10);
 
-            /**
-             * Show the form for creating a new resource.
-             */
-            public function create()
-            {
-                $facturas = Factura::all();
-                return view('contrasenas.create', compact('facturas'));
+        return view('contrasenas.index', compact('contrasenas'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Formulario de creación.
+     */
+    public function create()
+    {
+        $facturas = Factura::with('ordenCompra.cotizacion.cliente')
+            ->latest()
+            ->get();
+
+        return view('contrasenas.create', compact('facturas'));
+    }
+
+    /**
+     * Guardar nueva contraseña en estado BORRADOR.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'factura_id' => 'required|exists:facturas,id',
-            'codigo'     => 'required|string|max:255',
-            'fecha_documento' => 'required|date',
-            'archivo'    => 'nullable|file|max:5120',
-            'fecha_aprox'=> 'nullable|date',
+            'factura_id'       => 'required|exists:facturas,id',
+            'codigo'           => 'required|string|max:255|unique:contrasenas_pago,codigo',
+            'fecha_documento'  => 'required|date',
+            'fecha_aprox'      => 'nullable|date|after_or_equal:fecha_documento',
+            'archivo'          => 'nullable|file|mimes:pdf,jpg,png|max:10240',
         ]);
 
-        $archivoPath = null;
+        $data = $request->only(['factura_id', 'codigo', 'fecha_documento', 'fecha_aprox']);
+        $data['creada_por'] = Auth::id();
+        $data['status'] = 'borrador';
+
         if ($request->hasFile('archivo')) {
-            $archivoPath = $request->file('archivo')->store('contrasenas', 'public');
+            $data['archivo'] = $request->file('archivo')->store('contrasenas', 'public');
         }
 
-        ContrasenaPago::create([
-            'factura_id' => $request->factura_id,
-            'codigo'     => $request->codigo,
-            'fecha_documento' => $request->fecha_documento,
-            'archivo'    => $archivoPath,
-            'fecha_aprox'=> $request->fecha_aprox,
-            'creada_por' => Auth::id(),
-        ]);
+        ContrasenaPago::create($data);
 
-        return redirect()->route('contrasenas.index')->with('success', 'Contraseña registrada correctamente.');
+        return redirect()->route('contrasenas.index')
+            ->with('success', 'Contraseña de pago creada como borrador.');
     }
 
     /**
-     * Display the specified resource.
+     * Mostrar detalle de la contraseña.
      */
-    public function show(ContrasenaPago $contrasena)
+    public function show($id)
     {
-         $contrasena->load('factura.ordenCompra.cotizacion.cliente');
+        $contrasena = ContrasenaPago::with('factura.ordenCompra.cotizacion.cliente')->findOrFail($id);
         return view('contrasenas.show', compact('contrasena'));
     }
 
     /**
-     * Metodo Actualizar
-    */
-    public function update(Request $request, ContrasenaPago $contrasena)
+     * Editar (solo si está en borrador).
+     */
+    public function edit($id)
     {
+        $contrasena = ContrasenaPago::findOrFail($id);
+
+        if ($contrasena->status !== 'borrador' && Auth::user()->hasRole('asistente')) {
+            return redirect()->route('contrasenas.index')
+                ->with('error', 'Solo puedes editar contraseñas en estado borrador.');
+        }
+
+        $facturas = Factura::with('ordenCompra.cotizacion.cliente')->get();
+        return view('contrasenas.edit', compact('contrasena', 'facturas'));
+    }
+
+    /**
+     * Actualizar datos de la contraseña.
+     */
+    public function update(Request $request, $id)
+    {
+        $contrasena = ContrasenaPago::findOrFail($id);
+
         $request->validate([
-            'codigo' => 'required|string|max:255',
-            'estado' => 'required|in:pendiente,validada',
-            'fecha_aprox' => 'nullable|date',
-            'archivo' => 'nullable|file|max:5120',
-            'fecha_documento' => 'nullable|date',
+            'factura_id'       => 'required|exists:facturas,id',
+            'codigo'           => 'required|string|max:255|unique:contrasenas_pago,codigo,' . $contrasena->id,
+            'fecha_documento'  => 'required|date',
+            'fecha_aprox'      => 'nullable|date|after_or_equal:fecha_documento',
+            'archivo'          => 'nullable|file|mimes:pdf,jpg,png|max:10240',
         ]);
 
+        $data = $request->only(['factura_id', 'codigo', 'fecha_documento', 'fecha_aprox']);
+
         if ($request->hasFile('archivo')) {
-            $contrasena->archivo = $request->file('archivo')->store('contrasenas', 'public');
+            $data['archivo'] = $request->file('archivo')->store('contrasenas', 'public');
         }
 
-        $contrasena->codigo = $request->codigo;
-        $contrasena->estado = $request->estado;
-        $contrasena->fecha_documento = $request->fecha_documento;
-        $contrasena->fecha_aprox = $request->fecha_aprox;
-        if ($request->estado === 'validada' && !$contrasena->validada_en) {
-            $contrasena->validada_en = now();
+        $contrasena->update($data);
+
+        return redirect()->route('contrasenas.index')
+            ->with('success', 'Contraseña actualizada correctamente.');
+    }
+
+    /**
+     * Enviar contraseña a revisión (solo asistente).
+     */
+    public function enviarRevision($id)
+    {
+        $contrasena = ContrasenaPago::findOrFail($id);
+
+        if ($contrasena->status !== 'borrador') {
+            return back()->with('error', 'Solo se pueden enviar contraseñas en borrador.');
         }
+
+        $contrasena->update(['status' => 'revision']);
+
+        return back()->with('success', 'Contraseña enviada a revisión.');
+    }
+
+    /**
+     * Cambiar estado (solo admin o asistente según permisos).
+     */
+    public function cambiarEstado(Request $request, $id)
+    {
+        $contrasena = ContrasenaPago::findOrFail($id);
+        $user = Auth::user();
+        $nuevoEstado = $request->input('status');
+
+        $request->validate([
+            'status' => 'required|in:borrador,revision,aprobado,rechazado'
+        ]);
+
+        // Asistente → solo puede mover entre borrador y revisión
+        if ($user->hasRole('asistente')) {
+            if (!in_array($nuevoEstado, ['borrador', 'revision'])) {
+                return back()->with('error', 'No tienes permiso para cambiar a este estado.');
+            }
+        }
+
+        // Admin → solo puede aprobar o rechazar
+        if ($user->hasRole('admin')) {
+            if (!in_array($nuevoEstado, ['aprobado', 'rechazado'])) {
+                return back()->with('error', 'Solo puedes aprobar o rechazar contraseñas.');
+            }
+
+            // Registrar quién revisó
+            $contrasena->revisado_por = $user->id;
+        }
+
+        $contrasena->status = $nuevoEstado;
         $contrasena->save();
 
-        return redirect()->route('contrasenas.index')->with('success', 'Contraseña actualizada correctamente.');
+        return back()->with('success', 'Estado actualizado correctamente.');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Eliminar contraseña.
      */
-    public function edit(ContrasenaPago $contrasena)
+    public function destroy($id)
     {
-        $contrasena->load('factura.ordenCompra.cotizacion.cliente');
-        return view('contrasenas.edit', compact('contrasena'));
-    }
-    
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ContrasenaPago $contrasena)
-    {
+        $contrasena = ContrasenaPago::findOrFail($id);
         $contrasena->delete();
-        return redirect()->route('contrasenas.index')->with('success', 'Contraseña eliminada correctamente.');
+
+        return redirect()->route('contrasenas.index')
+            ->with('success', 'Contraseña eliminada correctamente.');
     }
 }

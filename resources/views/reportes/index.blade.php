@@ -74,7 +74,7 @@
                             @role('admin')
                                 <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Creado por</th>
                             @endrole
-                            @role('admin')
+                            @role('asistente')
                                 <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Revisado por</th>
                             @endrole
                             <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Estado</th>
@@ -147,13 +147,13 @@
                                     </div>
                                 </td>
 
-                                {{-- Creado por --}}
+                                {{-- Creado por (solo admin) --}}
                                 @role('admin')
                                     <td class="px-6 py-4 text-white">{{ $reporte->creadaPor->name ?? 'N/A' }}</td>
                                 @endrole
 
-                                {{-- Revisado por --}}
-                                @role('admin')
+                                {{-- Revisado por (solo asistente) --}}
+                                @role('asistente')
                                     <td class="px-6 py-4 text-gray-300">
                                         {{ $reporte->revisadoPor->name ?? '—' }}
                                     </td>

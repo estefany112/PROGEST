@@ -18,6 +18,8 @@ class ContrasenaPago extends Model
         'fecha_aprox',
         'fecha_documento',
         'creada_por',
+        'revisado_por', 
+        'status'
     ];
 
     public function factura()
@@ -28,6 +30,16 @@ class ContrasenaPago extends Model
     public function creadaPor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'creada_por');
+    }
+
+    public function revisadoPor() { return $this->belongsTo(User::class, 'revisado_por'); }
+
+    public function scopeVisiblesPara($query, $user)
+    {
+        if ($user->hasRole('asistente')) {
+            return $query->where('creada_por', $user->id);
+        }
+        return $query;
     }
 
 }

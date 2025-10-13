@@ -73,6 +73,9 @@
                                     <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Cotización</th>
                                     <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Fecha</th>
                                     <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Monto</th>
+                                    @role('asistente')
+                                        <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Revisado por</th>
+                                    @endrole
                                     <th class="px-6 py-3 text-center text-sm text-gray-300 uppercase">Acciones</th>
                                     @role('admin')
                                         <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Creada por</th>
@@ -94,24 +97,37 @@
                                         <td class="px-6 py-4 text-white">{{ \Carbon\Carbon::parse($orden->fecha)->format('d/m/Y') }}</td>
                                         <td class="px-6 py-4 text-white">Q{{ number_format($orden->monto_total, 2) }}</td>
 
+                                        {{-- Revisado por (solo asistente) --}}
+                                        @role('asistente')
+                                            <td class="px-6 py-4 text-gray-300">
+                                                {{ $orden->revisadoPor->name ?? '—' }}
+                                            </td>
+                                        @endrole
+
                                         <td class="px-6 py-4 text-sm font-medium">
                                             <div class="flex flex-wrap justify-center gap-2 items-center">
 
                                                 {{-- Select de estado --}}
-                                                <form action="{{ route('ordenes-compra.cambiarEstado', $orden) }}" method="POST">
+                                                <form action="{{ route('ordenes-compra.cambiarEstado', $orden->id) }}" method="POST">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <select name="status" class="px-2 py-1 border border-gray-700 bg-gray-900 text-gray-100 rounded-md text-xs">
-                                                        @role('admin')
+
+                                                    {{-- 🔹 Opciones adaptadas al rol --}}
+                                                    @role('admin')
+                                                        <select name="status" class="px-2 py-1 border border-gray-700 bg-gray-900 text-gray-100 rounded-md text-xs">
+                                                            <option value="revision" {{ $orden->status == 'revision' ? 'selected' : '' }}>En Revisión</option>
                                                             <option value="aprobado" {{ $orden->status == 'aprobado' ? 'selected' : '' }}>Aprobado</option>
                                                             <option value="rechazado" {{ $orden->status == 'rechazado' ? 'selected' : '' }}>Rechazado</option>
-                                                        @endrole
+                                                        </select>
+                                                    @endrole
 
-                                                        @role('asistente')
+                                                    @role('asistente')
+                                                        <select name="status" class="px-2 py-1 border border-gray-700 bg-gray-900 text-gray-100 rounded-md text-xs">
                                                             <option value="borrador" {{ $orden->status == 'borrador' ? 'selected' : '' }}>Borrador</option>
-                                                            <option value="revision" {{ $orden->status == 'revision' ? 'selected' : '' }}>En Revisión</option>
-                                                        @endrole
-                                                    </select>
+                                                            <option value="revision" {{ $orden->status == 'revision' ? 'selected' : '' }}>Enviar a Revisión</option>
+                                                        </select>
+                                                    @endrole
+
                                                     <button type="submit" class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-1 px-3 rounded text-xs ml-2">
                                                         Actualizar
                                                     </button>
@@ -157,7 +173,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="px-6 py-4 text-center text-gray-500 bg-gray-900">
+                                        <td colspan="8" class="px-6 py-4 text-center text-gray-500 bg-gray-900">
                                             No hay órdenes de compra registradas.
                                         </td>
                                     </tr>

@@ -140,7 +140,7 @@
             <h3 class="text-xl font-semibold text-white mb-2">Clientes</h3>
             <p class="text-gray-400 mb-4">Crea y gestiona información sobre clientes para la realización de una cotización.</p>
             <div class="flex gap-3">
-                <a href="{{ route('clientes.create') }}" class="text-green-400 hover:text-green-300 font-medium">Nuevo cliente →</a>
+                <a href="{{ route('clientes.create') }}" class="text-green-400 hover:text-green-300 font-medium">Nuevo cliente →</a></br>
                 <a href="{{ route('clientes.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver clientes →</a>
             </div>
         </div>
@@ -149,7 +149,7 @@
             <h3 class="text-xl font-semibold text-white mb-2">Cotizaciones</h3>
             <p class="text-gray-400 mb-4">Crea y gestiona tus cotizaciones.</p>
             <div class="flex gap-3">
-                <a href="{{ route('cotizaciones.create') }}" class="text-green-400 hover:text-green-300 font-medium">Nueva cotización →</a>
+                <a href="{{ route('cotizaciones.create') }}" class="text-green-400 hover:text-green-300 font-medium">Nueva cotización →</a></br>
                 <a href="{{ route('cotizaciones.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver cotizaciones →</a>
             </div>
         </div>
@@ -158,7 +158,7 @@
         <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
             <h3 class="text-xl font-semibold text-white mb-2">Órdenes de Compra</h3>
             <p class="text-gray-400 mb-4">Genera órdenes desde cotizaciones aprobadas.</p>
-            <a href="{{ route('ordenes-compra.create') }}" class="text-green-400 hover:text-green-300 font-medium">Nueva Orden de Compra →</a>
+            <a href="{{ route('ordenes-compra.create') }}" class="text-green-400 hover:text-green-300 font-medium">Nueva Orden de Compra →</a> </br>
             <a href="{{ route('ordenes-compra.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver órdenes →</a>
         </div>
 
@@ -174,7 +174,8 @@
         <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
             <h3 class="text-xl font-semibold text-white mb-2">Facturas</h3>
             <p class="text-gray-400 mb-4">Sube facturas externas emitidas por clientes.</p>
-            <a href="{{ route('facturas.create') }}" class="text-blue-400 hover:text-blue-300 font-medium">Subir factura →</a>
+            <a href="{{ route('facturas.create') }}" class="text-green-400 hover:text-green-300 font-medium">Subir factura →</a> </br>
+            <a href="{{ route('facturas.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver facturas →</a>
         </div>
 
         <!-- Contraseñas de Pago -->

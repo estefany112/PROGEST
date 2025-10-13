@@ -81,17 +81,23 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('reportes-trabajo/{id}/enviar-revision', [ReporteTrabajo::class, 'enviarRevision'])->name('reportes-trabajo.enviarRevision');
         Route::patch('reportes-trabajo/{id}/cambiar-estado', [ReporteTrabajoController::class, 'cambiarEstado'])->name('reportes-trabajo.cambiar-estado');
 
-
         // FACTURAS
         Route::resource('facturas', FacturaController::class);
+        Route::patch('/{id}/enviar-revision', [FacturaController::class, 'enviarRevision'])
+            ->name('facturas.enviarRevision');
+        Route::patch('/{id}/cambiar-estado', [FacturaController::class, 'cambiarEstado'])
+            ->name('facturas.cambiarEstado');
 
         // PAGOS
         Route::resource('pagos', PagoController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy', 'show']);
 
         // CONTRASEÑAS DE PAGO
         Route::resource('contrasenas', ContrasenaPagoController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy', 'show']);
-
-    });
+        Route::patch('/contrasenas/{contrasena}/enviar-revision', [ContrasenaPagoController::class, 'enviarRevision'])
+        ->name('contrasenas.enviarRevision');
+        Route::patch('/contrasenas/{contrasena}/cambiar-estado', [ContrasenaPagoController::class, 'cambiarEstado'])
+            ->name('contrasenas.cambiarEstado');
+        });
 });
 
 Route::middleware('auth')->group(function () {
