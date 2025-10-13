@@ -90,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
 
         // PAGOS
         Route::resource('pagos', PagoController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy', 'show']);
+        Route::patch('pagos/{id}/cambiar-estado', [PagoController::class, 'cambiarEstado'])->name('pagos.cambiarEstado');
 
         // CONTRASEÑAS DE PAGO
         Route::resource('contrasenas', ContrasenaPagoController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy', 'show']);
