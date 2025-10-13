@@ -14,7 +14,7 @@ use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\ContrasenaPagoController;
 use App\Http\Controllers\PagoController;
 use App\Models\OrdenCompra;
-
+use App\Models\ReporteTrabajo;
 
 Route::get('/debug-rol', function () {
     return view('debug-rol');
@@ -78,6 +78,9 @@ Route::middleware(['auth'])->group(function () {
 
         // REPORTES DE TRABAJO
         Route::resource('reportes-trabajo', ReporteTrabajoController::class);
+        Route::patch('reportes-trabajo/{id}/enviar-revision', [ReporteTrabajo::class, 'enviarRevision'])->name('reportes-trabajo.enviarRevision');
+        Route::patch('reportes-trabajo/{id}/cambiar-estado', [ReporteTrabajoController::class, 'cambiarEstado'])->name('reportes-trabajo.cambiar-estado');
+
 
         // FACTURAS
         Route::resource('facturas', FacturaController::class);

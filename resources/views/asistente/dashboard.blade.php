@@ -166,7 +166,8 @@
         <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
             <h3 class="text-xl font-semibold text-white mb-2">Reportes</h3>
             <p class="text-gray-400 mb-4">Adjunta reportes de servicios finalizados.</p>
-            <a href="{{ route('reportes-trabajo.create') }}" class="text-green-400 hover:text-green-300 font-medium">Subir reporte →</a>
+            <a href="{{ route('reportes-trabajo.create') }}" class="text-green-400 hover:text-green-300 font-medium">Subir reporte →</a> </br>
+            <a href="{{ route('reportes-trabajo.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver reporte →</a>
         </div>
         
         <!-- Facturas -->
