@@ -152,24 +152,24 @@ class OrdenCompraController extends Controller
             'status' => 'required|in:borrador,revision,aprobado,rechazado'
         ]);
 
-        // 🔹 Si el usuario es asistente (Spatie Role)
+        // Si el usuario es asistente (Spatie Role)
         if ($user->hasRole('asistente')) {
             if (!in_array($nuevoEstado, ['borrador', 'revision'])) {
                 return back()->with('error', 'No tienes permiso para cambiar a este estado.');
             }
         }
 
-        // 🔹 Si el usuario es administrador (Spatie Role)
+        // Si el usuario es administrador (Spatie Role)
         if ($user->hasRole('admin')) {
             if (!in_array($nuevoEstado, ['aprobado', 'rechazado'])) {
                 return back()->with('error', 'Solo puedes aprobar o rechazar órdenes.');
             }
 
-            // ✅ Guarda quién revisó la orden (solo admin)
+            // Guarda quién revisó la orden (solo admin)
             $orden->revisado_por = $user->id;
         }
 
-        // 🔹 Actualiza el estado y guarda
+        // Actualiza el estado y guarda
         $orden->status = $nuevoEstado;
         $orden->save();
 
