@@ -3,9 +3,9 @@
 @section('content')
 <div class="max-w-7xl mx-auto py-10 px-6">
     <div class="flex justify-between items-center mb-8">
-        <h1 class="text-2xl font-bold text-gray-900">Órdenes de Compra</h1>
+        <h1 class="text-2xl font-bold text-gray-100">Órdenes de Compra</h1>
 
-        {{-- Asistente puede crear órdenes --}}
+        {{-- Asistente puede crear reportes --}}
         @role('asistente')
             <a href="{{ route('ordenes-compra.create') }}" 
                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center">

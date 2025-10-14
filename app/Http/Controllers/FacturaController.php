@@ -12,13 +12,17 @@ class FacturaController extends Controller
     /**
      * Mostrar listado de facturas según el rol.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $status = $request->input('status');
 
         $facturas = Factura::with('ordenCompra.cotizacion.cliente')
             ->when($user->hasRole('asistente'), function ($query) use ($user) {
                 $query->where('creada_por', $user->id);
+            })
+            ->when($status, function ($query) use ($status) {
+                $query->where('status', $status); // 🔹 Aplica el filtro por estado
             })
             ->latest()
             ->paginate(10);

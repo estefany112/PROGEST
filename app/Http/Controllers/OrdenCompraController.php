@@ -12,16 +12,23 @@ class OrdenCompraController extends Controller
     /**
      * Mostrar listado según el rol del usuario
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $status = $request->input('status');
 
-        // Aplica el scope del modelo (visibles para cada rol)
         $ordenes = OrdenCompra::with('cotizacion')
-            ->visiblesPara($user)
+            ->when($user->hasRole('asistente'), function ($query) use ($user) {
+                // Solo muestra las creadas por el asistente autenticado
+                $query->where('creada_por', $user->id);
+            })
+            ->when($status, function ($query) use ($status) {
+                // Aplica el filtro si hay estado seleccionado
+                $query->where('status', $status);
+            })
             ->latest()
             ->paginate(10);
-
+            
         return view('ordenes_compra.index', compact('ordenes'));
     }
 

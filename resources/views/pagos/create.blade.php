@@ -1,36 +1,67 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto py-10 px-6">
+<div class="max-w-3xl mx-auto py-10 px-6">
     <h1 class="text-2xl font-bold text-white mb-6">Registrar Pago</h1>
 
-    <form action="{{ route('pagos.store') }}" method="POST">
+    @if(session('success'))
+        <div class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <form action="{{ route('pagos.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 bg-gray-900 p-6 rounded-lg shadow">
         @csrf
-        <div class="mb-6">
-            <label class="block text-sm text-gray-300 mb-2">Factura</label>
-            <select name="factura_id" class="w-full border border-gray-700 bg-gray-900 text-white rounded px-3 py-2">
+
+        <!-- Factura -->
+        <div>
+            <label for="factura_id" class="block text-gray-300 mb-2">Factura</label>
+            <select name="factura_id" id="factura_id" class="bg-gray-800 text-white rounded px-3 py-2 w-full" required>
+                <option value="">-- Selecciona una factura --</option>
                 @foreach($facturas as $factura)
-                    <option value="{{ $factura->id }}">{{ $factura->numero_factura }}</option>
+                    <option value="{{ $factura->id }}">
+                        {{ $factura->numero_factura }} — Cliente: {{ $factura->ordenCompra->cotizacion->cliente->nombre ?? 'N/A' }}
+                    </option>
                 @endforeach
             </select>
         </div>
 
-        <div class="mb-6">
-            <label class="block text-sm text-gray-300 mb-2">Estado</label>
-            <select name="estado" class="w-full border border-gray-700 bg-gray-900 text-white rounded px-3 py-2">
-                <option value="pendiente">Pendiente</option>
-                <option value="pagado">Pagado</option>
+        <!-- Contraseña de Pago (opcional) -->
+        <div>
+            <label for="contrasena_id" class="block text-gray-300 mb-2">Contraseña de Pago (opcional)</label>
+            <select name="contrasena_id" id="contrasena_id" class="bg-gray-800 text-white rounded px-3 py-2 w-full">
+                <option value="">— Sin contraseña —</option>
+                @foreach($contrasenas as $c)
+                    <option value="{{ $c->id }}">
+                        {{ $c->codigo }} — Factura: {{ $c->factura->numero_factura ?? 'N/A' }}
+                    </option>
+                @endforeach
             </select>
         </div>
 
-        <div class="mb-6">
-            <label class="block text-sm text-gray-300 mb-2">Fecha de Pago</label>
-            <input type="date" name="fecha_pago" class="w-full border border-gray-700 bg-gray-900 text-white rounded px-3 py-2">
+        <!-- Fecha de Pago -->
+        <div>
+            <label for="fecha_pago" class="block text-gray-300 mb-2">Fecha de Pago</label>
+            <input type="date" name="fecha_pago" id="fecha_pago" class="bg-gray-800 text-white rounded px-3 py-2 w-full" required>
         </div>
 
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">
-            Guardar
-        </button>
+        <!-- Archivo -->
+        <div>
+            <label for="archivo" class="block text-gray-300 mb-2">Comprobante (PDF o imagen)</label>
+            <input type="file" name="archivo" id="archivo" accept=".pdf,.jpg,.png" class="bg-gray-800 text-white rounded px-3 py-2 w-full">
+        </div>
+
+        <!-- Botón -->
+        <div class="flex justify-end">
+            <button type="submit" class="bg-purple-600 hover:bg-purple-800 text-white px-6 py-2 rounded font-semibold">
+                Guardar Pago
+            </button>
+        </div>
     </form>
 </div>
 @endsection

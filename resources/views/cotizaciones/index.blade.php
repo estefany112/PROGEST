@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-7xl mx-auto py-10 px-6">
     <div class="flex justify-between items-center mb-8">
-        <h1 class="text-2xl font-bold text-gray-900">Cotizaciones</h1>
+        <h1 class="text-2xl font-bold text-gray-100">Cotizaciones</h1>
 
         {{-- Asistente puede crear cotizaciones --}}
         @role('asistente')

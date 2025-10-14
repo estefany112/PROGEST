@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pago;
 use App\Models\Factura;
+use App\Models\ContrasenaPago;
 use Illuminate\Support\Facades\Auth;
 
 class PagoController extends Controller
@@ -12,20 +13,22 @@ class PagoController extends Controller
     /**
      * Listado de pagos según el rol del usuario
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $status = $request->input('status');
 
-        if ($user->hasRole('asistente')) {
-            $pagos = Pago::where('creada_por', $user->id)
-                ->with('factura.ordenCompra.cotizacion.cliente')
-                ->latest()
-                ->paginate(10);
-        } else {
-            $pagos = Pago::with('factura.ordenCompra.cotizacion.cliente')
-                ->latest()
-                ->paginate(10);
-        }
+        $pagos = Pago::with('factura.ordenCompra.cotizacion.cliente')
+        ->when($user->hasRole('asistente'), function ($query) use ($user) {
+            // Solo muestra los pagos creados por el asistente autenticado
+            $query->where('creada_por', $user->id);
+        })
+        ->when($status, function ($query) use ($status) {
+            // Aplica el filtro si se seleccionó un estado
+            $query->where('status', $status);
+        })
+        ->latest()
+        ->paginate(10);
 
         return view('pagos.index', compact('pagos'));
     }
@@ -36,7 +39,8 @@ class PagoController extends Controller
     public function create()
     {
         $facturas = Factura::with('ordenCompra.cotizacion.cliente')->get();
-        return view('pagos.create', compact('facturas'));
+        $contrasenas = ContrasenaPago::with('factura')->get();
+        return view('pagos.create', compact('facturas', 'contrasenas'));
     }
 
     /**
@@ -46,11 +50,12 @@ class PagoController extends Controller
     {
         $request->validate([
             'factura_id'  => 'required|exists:facturas,id',
+            'contrasena_id'  => 'nullable|exists:contrasenas_pago,id',
             'fecha_pago'  => 'required|date',
             'archivo'     => 'nullable|file|mimes:pdf,jpg,png|max:10240'
         ]);
 
-        $data = $request->only(['factura_id', 'fecha_pago']);
+        $data = $request->only(['factura_id', 'contrasena_id','fecha_pago']);
         $data['creada_por'] = Auth::id();
         $data['status'] = 'pendiente';
 
@@ -80,8 +85,9 @@ class PagoController extends Controller
     {
         $pago = Pago::findOrFail($id);
         $facturas = Factura::with('ordenCompra.cotizacion.cliente')->get();
+        $contrasenas = ContrasenaPago::with('factura')->get();
 
-        return view('pagos.edit', compact('pago', 'facturas'));
+        return view('pagos.edit', compact('pago', 'facturas', 'contrasenas'));
     }
 
     /**
@@ -93,11 +99,12 @@ class PagoController extends Controller
 
         $request->validate([
             'factura_id'  => 'required|exists:facturas,id',
+            'contrasena_id' => 'nullable|exists:contrasenas_pago,id',
             'fecha_pago'  => 'required|date',
             'archivo'     => 'nullable|file|mimes:pdf,jpg,png|max:10240',
         ]);
 
-        $data = $request->only(['factura_id', 'fecha_pago']);
+        $data = $request->only(['factura_id', 'contrasena_id', 'fecha_pago']);
 
         if ($request->hasFile('archivo')) {
             $data['archivo'] = $request->file('archivo')->store('pagos', 'public');

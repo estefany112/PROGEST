@@ -19,7 +19,8 @@ class ContrasenaPago extends Model
         'fecha_documento',
         'creada_por',
         'revisado_por', 
-        'status'
+        'status', '
+        contrasena_id'
     ];
 
     public function factura()

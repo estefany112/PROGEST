@@ -17,6 +17,7 @@ class Pago extends Model
         'creada_por',
         'revisado_por',
         'status',
+        'contrasena_id'
     ];
 
     /**
@@ -42,6 +43,13 @@ class Pago extends Model
     {
         return $this->belongsTo(User::class, 'revisado_por');
     }
+
+    // Relacion con contraseña de pago
+    public function contrasenaPago()
+    {
+        return $this->belongsTo(ContrasenaPago::class, 'contrasena_id');
+    }
+
 
     /**
      * ===========================

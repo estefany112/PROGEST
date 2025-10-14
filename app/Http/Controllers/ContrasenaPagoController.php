@@ -12,12 +12,20 @@ class ContrasenaPagoController extends Controller
     /**
      * Listado de contraseñas según rol.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-
+        $status = $request->input('status');
+        
         $contrasenas = ContrasenaPago::with('factura.ordenCompra.cotizacion.cliente')
-            ->visiblesPara($user)
+            ->when($user->hasRole('asistente'), function ($query) use ($user) {
+                // Solo muestra las creadas por el asistente actual
+                $query->where('creada_por', $user->id);
+            })
+            ->when($status, function ($query) use ($status) {
+                // Aplica el filtro por estado si se seleccionó
+                $query->where('status', $status);
+            })
             ->latest()
             ->paginate(10);
 

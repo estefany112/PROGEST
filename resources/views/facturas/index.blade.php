@@ -26,6 +26,21 @@
         </div>
     @endif
 
+    {{-- Filtro por estado --}}
+    <form method="GET" action="{{ route('facturas.index') }}" class="mb-6 flex items-center space-x-3">
+        <select name="status" class="px-3 py-2 border rounded-md bg-gray-800 text-white">
+            <option value="">-- Todos los estados --</option>
+            <option value="borrador" {{ request('status') == 'borrador' ? 'selected' : '' }}>Borrador</option>
+            <option value="revision" {{ request('status') == 'revision' ? 'selected' : '' }}>En Revisión</option>
+            <option value="aprobado" {{ request('status') == 'aprobado' ? 'selected' : '' }}>Aprobado</option>
+            <option value="rechazado" {{ request('status') == 'rechazado' ? 'selected' : '' }}>Rechazado</option>
+        </select>
+
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            Filtrar
+        </button>
+    </form>
+    
     {{-- Panel informativo según rol --}}
     @role('admin')
         <div class="mb-6 p-4 bg-blue-900 border border-blue-700 rounded-lg">

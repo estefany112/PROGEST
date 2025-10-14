@@ -96,7 +96,7 @@
                 <!-- Estado inicial -->
                 <div class="mb-6">
                     <p class="text-sm text-gray-400 italic">
-                        🔹 La orden se creará en estado <strong>borrador</strong>.  
+                        La orden se creará en estado <strong>borrador</strong>.  
                         Luego podrás enviarla a revisión para que el administrador la apruebe.
                     </p>
                 </div>
