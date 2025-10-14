@@ -13,3 +13,5 @@ class Cliente extends Model
          return $this->hasMany(\App\Models\Cotizacion::class, 'cliente_id');
     }
 }
+
+

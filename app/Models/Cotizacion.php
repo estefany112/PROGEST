@@ -80,7 +80,7 @@ class Cotizacion extends Model
     public function calcularTotales(): void
     {
         $subtotal = $this->items->sum('total');
-        $iva = $subtotal * 0.19; // 19% IVA
+        $iva = $subtotal * 0.12; // 12% IVA
         $total = $subtotal + $iva;
 
         $this->update([
@@ -163,3 +163,6 @@ class Cotizacion extends Model
     }
 
 } 
+
+
+
