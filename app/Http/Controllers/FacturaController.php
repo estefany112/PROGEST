@@ -137,7 +137,7 @@ class FacturaController extends Controller
     }
 
     /**
-     * Enviar factura a revisión (solo asistente).
+     * Enviar factura a revisión 
      */
     public function enviarRevision($id)
     {
@@ -153,7 +153,7 @@ class FacturaController extends Controller
     }
 
     /**
-     * Aprobar o rechazar factura (solo admin).
+     * Borrador, revisión, Aprobar o rechazar una factura
      */
     public function cambiarEstado(Request $request, $id)
     {
@@ -165,20 +165,20 @@ class FacturaController extends Controller
             'status' => 'required|in:borrador,revision,aprobado,rechazado'
         ]);
 
-        // 🔹 Asistente: solo puede mover a revisión
+        // Asistente: solo puede mover a revisión
         if ($user->hasRole('asistente')) {
             if (!in_array($nuevoEstado, ['borrador', 'revision'])) {
                 return back()->with('error', 'No tienes permiso para cambiar a este estado.');
             }
         }
 
-        // 🔹 Admin: aprobar o rechazar
+        // Admin: aprobar o rechazar
         if ($user->hasRole('admin')) {
             if (!in_array($nuevoEstado, ['aprobado', 'rechazado'])) {
                 return back()->with('error', 'Solo puedes aprobar o rechazar facturas.');
             }
 
-            // ✅ Registrar revisor
+            // Registrar revisor
             $factura->revisado_por = $user->id;
         }
 

@@ -19,17 +19,17 @@ class ReporteTrabajoController extends Controller
 
         $query = ReporteTrabajo::with(['ordenCompra.cotizacion', 'creadaPor']);
 
-        // 🔹 Si es asistente → solo ve los suyos
+        // Si es asistente → solo ve los suyos
         if ($user->hasRole('asistente')) {
             $query->where('creada_por', $user->id);
         }
 
-        // 🔹 Si es admin → NO ve los borradores
+        // Si es admin → NO ve los borradores
         if ($user->hasRole('admin')) {
             $query->where('status', '!=', 'borrador');
         }
 
-        // 🔹 Filtro por estado manual (desde el select del filtro)
+        // Filtro por estado manual (desde el select del filtro)
         if (request('status')) {
             $query->where('status', request('status'));
         }
