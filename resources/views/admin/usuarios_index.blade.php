@@ -64,20 +64,12 @@
             <td class="px-4 py-3">{{ $u->name }}</td>
             <td class="px-4 py-3">{{ $u->email }}</td>
             <td class="px-4 py-3">
-              @if($u->id !== 1)
-                <form action="{{ route('usuarios.update', $u->id) }}" method="POST">
-                  @csrf
-                  @method('PUT')
-                  <select name="tipo" 
-                          class="bg-gray-800 border border-gray-700 text-white text-sm rounded px-2 py-1"
-                          onchange="this.form.submit()">
-                      <option value="">-- Selecciona --</option>
-                      <option value="admin" {{ $u->tipo === 'admin' ? 'selected' : '' }}>Admin</option>
-                      <option value="asistente" {{ $u->tipo === 'asistente' ? 'selected' : '' }}>Asistente</option>
-                  </select>
-                </form>
+              @if($u->id === 1)
+                  <span class="text-gray-400 italic">Admin (Protegido)</span>
               @else
-                <span class="text-gray-400 italic">Admin (Protegido)</span>
+                  <span class="px-2 py-1 text-xs rounded bg-purple-900">
+                      {{ ucfirst($u->tipo ?? 'Sin rol') }}
+                  </span>
               @endif
             </td>
             <td class="px-4 py-3">

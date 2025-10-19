@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Bitacora;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
@@ -48,6 +49,14 @@ class UsuarioController extends Controller
     public function pendientes()
     {
         $usuariosPendientes = User::whereIn('estado', ['pendiente', 'rechazado'])->get();
+
+        Bitacora::create([
+            'usuario' => auth()->user()->name,
+            'accion' => 'Consulta',
+            'detalle' => 'El administrador consultó la lista de usuarios pendientes o rechazados',
+            'modulo' => 'Usuarios',
+        ]);
+
         return view('admin.usuarios_pendientes', compact('usuariosPendientes'));
     }
 
@@ -61,8 +70,14 @@ class UsuarioController extends Controller
         $user = User::findOrFail($id);
         $user->estado = 'activo';
         $user->save();
-
         $user->syncRoles([$request->rol]);
+
+        Bitacora::create([
+            'usuario' => auth()->user()->name,
+            'accion' => 'Aprobación',
+            'detalle' => 'Se aprobó al usuario "' . $user->name . '" con rol ' . $request->rol,
+            'modulo' => 'Usuarios',
+        ]);
 
         return redirect()->route('admin.usuarios.pendientes')->with('success', 'Usuario aprobado correctamente.');
     }
@@ -75,36 +90,100 @@ class UsuarioController extends Controller
         $user->syncRoles([]); // Elimina todos los roles
         $user->save();
 
+        Bitacora::create([
+            'usuario' => auth()->user()->name,
+            'accion' => 'Rechazo',
+            'detalle' => 'Se rechazó al usuario "' . $user->name . '"',
+            'modulo' => 'Usuarios',
+        ]);
+
         return redirect()->route('admin.usuarios.pendientes')->with('success', 'Usuario rechazado correctamente.');
     }
 
     public function edit($id)
     {
         $usuario = User::findOrFail($id);
-        return view('admin.usuarios_edit', compact('usuario'));
+        $roles = ['admin', 'asistente']; 
+        $estados = ['pendiente', 'activo', 'rechazado'];
+
+        Bitacora::create([
+            'usuario' => auth()->user()->name,
+            'accion' => 'Consulta',
+            'detalle' => 'El administrador accedió al formulario de edición del usuario "' . $usuario->name . '"',
+            'modulo' => 'Usuarios',
+        ]);
+
+        return view('admin.usuarios_edit', compact('usuario', 'roles', 'estados'));
     }
 
-     public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         if ($id == 1) {
-        return back()->with('error', 'No puedes modificar al usuario principal.');
-    }
+            return back()->with('error', 'No puedes modificar al usuario principal.');
+        }
+
         $user = User::findOrFail($id);
 
-        // Validar que el rol sea válido
-        if ($request->filled('tipo') && in_array($request->tipo, ['admin', 'asistente'])) {
-            $user->syncRoles([$request->tipo]);
-            $user->tipo = $request->tipo; // si usas la columna 'tipo' en users
+        // Permite que solo se mande uno de los dos campos
+        $request->validate([
+            'name'   => 'required|string|max:255',
+            'email'  => 'required|email|max:255|unique:users,email,' . $id,
+            'tipo'   => 'nullable|in:admin,asistente',
+            'estado' => 'nullable|in:pendiente,activo,rechazado',
+        ]);
+
+        $oldName = $user->name;
+        $oldEmail = $user->email;
+        $oldTipo = $user->tipo;
+        $oldEstado = $user->estado;
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'tipo' => $request->tipo,
+            'estado' => $request->estado,
+        ]);
+
+        $user->syncRoles([$request->tipo]);
+
+        Bitacora::create([
+            'usuario' => auth()->user()->name,
+            'accion' => 'Actualización',
+            'detalle' => sprintf(
+                'Se actualizó el usuario "%s". [Antes: %s, %s, %s] [Ahora: %s, %s, %s]',
+                $user->name,
+                $oldName,
+                $oldEmail,
+                $oldEstado,
+                $request->name,
+                $request->email,
+                $request->estado
+            ),
+            'modulo' => 'Usuarios',
+        ]);
+
+        return redirect()->route('usuarios.index')
+            ->with('success', 'Usuario actualizado correctamente y registrado en bitácora.');   
         }
 
-        if ($request->filled('estado') && in_array($request->estado, ['pendiente', 'activo', 'rechazado'])) {
-            $user->estado = $request->estado;
+        public function destroy($id)
+        {
+            $user = User::findOrFail($id);
+
+            if ($user->id == 1) {
+                return back()->with('error', 'No puedes eliminar al usuario principal.');
+            }
+
+            Bitacora::create([
+                'usuario' => auth()->user()->name,
+                'accion' => 'Eliminación',
+                'detalle' => 'Se eliminó al usuario "' . $user->name . '"',
+                'modulo' => 'Usuarios',
+            ]);
+
+            $user->delete();
+
+            return redirect()->route('usuarios.index')
+                ->with('success', 'Usuario eliminado correctamente.');
         }
-
-        $user->save();
-
-        return back()->with('success', 'Usuario actualizado correctamente.');
     }
-
-}
-

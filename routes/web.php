@@ -40,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/usuarios/{id}/edit',  [UsuarioController::class, 'edit'])->name('usuarios.edit');
         Route::put('/usuarios/{id}',       [UsuarioController::class, 'update'])->name('usuarios.update');
         Route::delete('/usuarios/{id}',    [UsuarioController::class, 'destroy'])->name('usuarios.destroy');
+        Route::patch('/usuarios/{id}/actualizar-rol', [UsuarioController::class, 'actualizarRol'])->name('usuarios.actualizarRol');
     });
 
     // ASISTENTE

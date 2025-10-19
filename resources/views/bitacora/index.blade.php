@@ -26,6 +26,7 @@
             <option value="Creación" {{ request('accion') == 'Creación' ? 'selected' : '' }}>Creación</option>
             <option value="Actualización" {{ request('accion') == 'Actualización' ? 'selected' : '' }}>Actualización</option>
             <option value="Eliminación" {{ request('accion') == 'Eliminación' ? 'selected' : '' }}>Eliminación</option>
+            <option value="Consulta" {{ request('accion') == 'Consulta' ? 'selected' : '' }}>Consulta</option>
         </select>
 
         <select name="modulo" class="px-3 py-2 border rounded-md bg-gray-800 text-white">
