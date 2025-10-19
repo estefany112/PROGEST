@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\Cotizacion;
 use App\Models\ItemCotizacion;
+use App\Models\Bitacora;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -95,6 +96,14 @@ class CotizacionController extends Controller
             // Calcular totales
             $cotizacion->calcularTotales();
 
+            // Registrar en la bitácora
+            Bitacora::create([
+                'usuario' => auth()->user()->name,  // Usuario que realizó la acción
+                'accion' => 'Creación',             // Tipo de acción
+                'detalle' => 'Se creó una cotización para el cliente ' . $request->cliente_id,
+                'modulo' => 'Cotización',           // Módulo en el que ocurrió la acción
+            ]);
+
             DB::commit();
 
             return redirect()->route('cotizaciones.show', $cotizacion)
@@ -184,6 +193,14 @@ class CotizacionController extends Controller
             // Calcular totales
             $cotizacion->calcularTotales();
 
+            // Registrar en la bitácora
+            Bitacora::create([
+                'usuario' => auth()->user()->name,  
+                'accion' => 'Actualización',         
+                'detalle' => 'Se actualizó la cotización con folio ' . $cotizacion->folio,
+                'modulo' => 'Cotización',            
+            ]);
+
             DB::commit();
 
             return redirect()->route('cotizaciones.show', $cotizacion)
@@ -202,10 +219,20 @@ class CotizacionController extends Controller
     {
         $this->authorize('delete', $cotizacion);
 
-        try {
+         try {
+            // Registrar en la bitácora antes de eliminar
+            Bitacora::create([
+                'usuario' => auth()->user()->name,  
+                'detalle' => 'Se eliminó la cotización con folio ' . $cotizacion->folio,
+                'modulo' => 'Cotización',            
+            ]);
+
+            // Eliminar cotización
             $cotizacion->delete();
+
             return redirect()->route('cotizaciones.index')
                 ->with('success', 'Cotización eliminada exitosamente.');
+
         } catch (\Exception $e) {
             return back()->with('error', 'Error al eliminar la cotización: ' . $e->getMessage());
         }
@@ -223,6 +250,15 @@ class CotizacionController extends Controller
         }
 
         $cotizacion->update(['estado' => 'en_revision']);
+
+        // Registrar el evento en la bitácora
+        dd('Envío a revisión', auth()->user()->name, $cotizacion->folio);
+        Bitacora::create([
+            'usuario' => auth()->user()->name,  
+            'accion' => 'Envío a Revisión',     
+            'detalle' => 'Se envió la cotización con folio ' . $cotizacion->folio . ' a revisión.',
+            'modulo' => 'Cotización',            
+        ]);
 
         return redirect()->route('cotizaciones.show', $cotizacion)
             ->with('success', 'Cotización enviada a revisión exitosamente.');
@@ -243,6 +279,14 @@ class CotizacionController extends Controller
             'estado' => 'aprobada',
             'revisada_por' => Auth::id(),
         ]);
+
+        // Registrar en la bitácora
+        Bitacora::create([
+        'usuario' => auth()->user()->name,  
+        'accion' => 'Aprobación',    
+        'detalle' => 'La cotización con folio ' . $cotizacion->folio . ' ha sido aprobada.', 
+        'modulo' => 'Cotización',           
+    ]);
 
         return redirect()->route('cotizaciones.show', $cotizacion)
             ->with('success', 'Cotización aprobada exitosamente.');
@@ -267,6 +311,14 @@ class CotizacionController extends Controller
             'estado' => 'rechazada',
             'comentario_rechazo' => $request->comentario_rechazo,
             'revisada_por' => Auth::id(),
+        ]);
+
+        // Registrar en la bitácora
+        Bitacora::create([
+            'usuario' => auth()->user()->name,  
+            'accion' => 'Rechazo',    
+            'detalle' => 'La cotización con folio ' . $cotizacion->folio . ' ha sido rechazada.',
+            'modulo' => 'Cotización',           
         ]);
 
         return redirect()->route('cotizaciones.show', $cotizacion)
@@ -331,6 +383,14 @@ class CotizacionController extends Controller
     }
 
     $cotizacion->save();
+
+    // Registrar en la bitácora el cambio de estado
+    Bitacora::create([
+        'usuario' => auth()->user()->name,  
+        'accion' => 'Cambio de Estado',     
+        'detalle' => 'Se cambió el estado de la cotización con folio ' . $cotizacion->folio . ' ha sido cambiada a ' . $nuevoEstado,
+        'modulo' => 'Cotización',           
+    ]);
 
     return back()->with('success', 'Estado de la cotización actualizado correctamente.');
 }

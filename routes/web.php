@@ -13,6 +13,7 @@ use App\Http\Controllers\ReporteTrabajoController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\ContrasenaPagoController;
 use App\Http\Controllers\PagoController;
+use App\Http\Controllers\BitacoraController;
 use App\Models\OrdenCompra;
 use App\Models\ReporteTrabajo;
 
@@ -75,7 +76,6 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('ordenes-compra/{id}/enviar-revision', [OrdenCompraController::class, 'enviarRevision'])->name('ordenes-compra.enviarRevision');
         Route::patch('ordenes-compra/{id}/cambiar-estado', [OrdenCompraController::class, 'cambiarEstado'])->name('ordenes-compra.cambiarEstado');
 
-
         // REPORTES DE TRABAJO
         Route::resource('reportes-trabajo', ReporteTrabajoController::class);
         Route::patch('reportes-trabajo/{id}/enviar-revision', [ReporteTrabajo::class, 'enviarRevision'])->name('reportes-trabajo.enviarRevision');
@@ -99,6 +99,10 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/contrasenas/{contrasena}/cambiar-estado', [ContrasenaPagoController::class, 'cambiarEstado'])
             ->name('contrasenas.cambiarEstado');
         });
+
+        // BITACORA
+        Route::get('/bitacoras', [BitacoraController::class, 'index'])->name('bitacoras.index');
+
 });
 
 Route::middleware('auth')->group(function () {
