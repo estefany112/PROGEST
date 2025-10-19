@@ -22,6 +22,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
+
+        Schema::table('contrasenas_pago', function (Blueprint $table) {
+            $table->dropForeign(['factura_id']);
+        });
+
         Schema::dropIfExists('facturas');
+
+        Schema::enableForeignKeyConstraints();
     }
 };

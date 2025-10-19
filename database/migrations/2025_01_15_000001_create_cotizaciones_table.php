@@ -34,6 +34,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('ordenes_compra', function (Blueprint $table) {
+            // Eliminar la clave foránea en la tabla 'ordenes_compra' que hace referencia a 'cotizaciones'
+            $table->dropForeign(['cotizacion_id']);
+        });
+
+        // Eliminar la tabla 'cotizaciones'
         Schema::dropIfExists('cotizaciones');
     }
 }; 

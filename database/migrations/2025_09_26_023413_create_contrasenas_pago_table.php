@@ -32,6 +32,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-       Schema::dropIfExists('contrasenas_pagos');
+       Schema::table('contrasenas_pago', function (Blueprint $table) {
+            // Eliminar la clave foránea
+            $table->dropForeign(['factura_id']);
+        });
+
+        // Eliminar la tabla
+        Schema::dropIfExists('contrasenas_pago');
     }
 };
