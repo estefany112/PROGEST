@@ -32,6 +32,7 @@
 
         <select name="modulo" class="px-3 py-2 border rounded-md bg-gray-800 text-white">
             <option value="">-- Todos los módulos --</option>
+            <option value="Perfil de Usuario" {{ request('modulo') == 'Perfil de Usuario' ? 'selected' : '' }}>Perfil de Usuario</option>
             <option value="Usuarios" {{ request('modulo') == 'Usuarios' ? 'selected' : '' }}>Usuarios</option>
             <option value="Clientes" {{ request('modulo') == 'Clientes' ? 'selected' : '' }}>Clientes</option>
             <option value="Cotización" {{ request('modulo') == 'Cotización' ? 'selected' : '' }}>Cotización</option>

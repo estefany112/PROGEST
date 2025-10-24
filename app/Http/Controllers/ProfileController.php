@@ -43,7 +43,7 @@ class ProfileController extends Controller
         if ($oldName !== $user->name || $oldEmail !== $user->email) {
             Bitacora::create([
                 'usuario' => $user->name,
-                'accion' => 'Actualización de Perfil',
+                'accion' => 'Actualización',
                 'detalle' => sprintf(
                     'El usuario actualizó su perfil. [Antes: %s, %s] [Ahora: %s, %s]',
                     $oldName,
@@ -72,7 +72,7 @@ class ProfileController extends Controller
         // Registrar eliminación de cuenta
         Bitacora::create([
             'usuario' => $user->name,
-            'accion' => 'Eliminación de Cuenta',
+            'accion' => 'Eliminación',
             'detalle' => 'El usuario eliminó su propia cuenta del sistema.',
             'modulo' => 'Perfil de Usuario',
         ]);
