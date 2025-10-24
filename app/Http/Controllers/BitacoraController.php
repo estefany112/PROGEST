@@ -11,7 +11,7 @@ class BitacoraController extends Controller
    public function index(Request $request)
     {
         // Filtrar por acción si se ha seleccionado
-        $query = Bitacora::query();
+        $query = \App\Models\Bitacora::query();
 
         if ($request->filled('accion')) {
             $query->where('accion', $request->accion);
@@ -25,7 +25,7 @@ class BitacoraController extends Controller
         $this->authorize('viewAny', Bitacora::class);
         
         // Obtener todos los registros de la bitácora, ordenados por fecha
-        $bitacoras = $query->orderBy('created_at', 'desc')->paginate(10);
+        $bitacoras = $query->orderBy('created_at', 'desc')->paginate(4);
         $bitacoras->appends($request->all());
 
         // Pasar los registros a la vista

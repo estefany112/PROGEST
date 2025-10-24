@@ -59,9 +59,6 @@ class ClienteController extends Controller
         return view('clientes.create');
     }
 
-    // (Opcional) Si quisieras usar REST estándar, podrías redirigir a guardar():
-    // public function store(Request $request) { return $this->guardar($request); }
-
     // === VER detalle ===
     public function show(Cliente $cliente)
     {
@@ -92,9 +89,9 @@ class ClienteController extends Controller
     public function destroy(Cliente $cliente)
     {
         // Si quieres restringir eliminación cuando existan cotizaciones:
-        // if ($cliente->cotizaciones()->exists()) {
-        //     return back()->with('error','No se puede eliminar: tiene cotizaciones.');
-        // }
+        if ($cliente->cotizaciones()->exists()) {
+            return back()->with('error','No se puede eliminar: tiene cotizaciones.');
+        }
 
         $cliente->delete();
 

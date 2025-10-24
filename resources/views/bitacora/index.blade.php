@@ -19,7 +19,7 @@
         </div>
     @endif
 
-    {{-- 🔹 Filtros --}}
+    {{-- Filtros --}}
     <form method="GET" action="{{ route('bitacoras.index') }}" class="mb-6 flex flex-wrap items-center space-x-3">
         <select name="accion" class="px-3 py-2 border rounded-md bg-gray-800 text-white">
             <option value="">-- Todas las acciones --</option>
@@ -27,6 +27,7 @@
             <option value="Actualización" {{ request('accion') == 'Actualización' ? 'selected' : '' }}>Actualización</option>
             <option value="Eliminación" {{ request('accion') == 'Eliminación' ? 'selected' : '' }}>Eliminación</option>
             <option value="Consulta" {{ request('accion') == 'Consulta' ? 'selected' : '' }}>Consulta</option>
+            <option value="Cambio de Estado" {{ request('accion') == 'Cambio de Estado' ? 'selected' : '' }}>Cambio de Estado</option>
         </select>
 
         <select name="modulo" class="px-3 py-2 border rounded-md bg-gray-800 text-white">
@@ -46,7 +47,7 @@
         </button>
     </form>
 
-    {{-- 🔹 Tabla de registros --}}
+    {{-- Tabla de registros --}}
     <div class="bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-100">
             <div class="overflow-x-auto">
@@ -81,7 +82,7 @@
                 </table>
             </div>
 
-            {{-- 🔹 Paginación --}}
+            {{-- Paginación --}}
             <div class="mt-4">{{ $bitacoras->links() }}</div>
         </div>
     </div>
