@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Bitacora;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,13 +27,33 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+       $user = $request->user();
+        $oldName = $user->name;
+        $oldEmail = $user->email;
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
+
+        // Registrar en bitácora solo si cambió algo
+        if ($oldName !== $user->name || $oldEmail !== $user->email) {
+            Bitacora::create([
+                'usuario' => $user->name,
+                'accion' => 'Actualización de Perfil',
+                'detalle' => sprintf(
+                    'El usuario actualizó su perfil. [Antes: %s, %s] [Ahora: %s, %s]',
+                    $oldName,
+                    $oldEmail,
+                    $user->name,
+                    $user->email
+                ),
+                'modulo' => 'Perfil de Usuario',
+            ]);
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -48,8 +69,15 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        Auth::logout();
+        // Registrar eliminación de cuenta
+        Bitacora::create([
+            'usuario' => $user->name,
+            'accion' => 'Eliminación de Cuenta',
+            'detalle' => 'El usuario eliminó su propia cuenta del sistema.',
+            'modulo' => 'Perfil de Usuario',
+        ]);
 
+        Auth::logout();
         $user->delete();
 
         $request->session()->invalidate();

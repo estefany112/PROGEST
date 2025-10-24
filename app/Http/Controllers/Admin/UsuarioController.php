@@ -146,9 +146,14 @@ class UsuarioController extends Controller
 
         $user->syncRoles([$request->tipo]);
 
+        // Determinar tipo de acción
+        $accion = ($id == auth()->id())
+            ? 'Actualización Propia (Administrador)'
+            : 'Actualización de Usuario';
+
         Bitacora::create([
             'usuario' => auth()->user()->name,
-            'accion' => 'Actualización',
+            'accion' => $accion,
             'detalle' => sprintf(
                 'Se actualizó el usuario "%s". [Antes: %s, %s, %s] [Ahora: %s, %s, %s]',
                 $user->name,
