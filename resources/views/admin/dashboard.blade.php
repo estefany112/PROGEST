@@ -190,6 +190,17 @@
         <a href="{{ route('pagos.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ir a pagos →</a>
     </div>
 
+    <!-- Bitácora -->
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
+        <h3 class="text-xl font-semibold text-white mb-2">Bitácora</h3>
+        <p class="text-gray-400 mb-4">
+            Consulta el registro detallado de todas las acciones realizadas en el sistema PROGEST.
+        </p>
+        <a href="{{ route('bitacoras.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">
+            Ver bitácora →
+        </a>
     </div>
+
     </div>
+</div>
 @endsection
