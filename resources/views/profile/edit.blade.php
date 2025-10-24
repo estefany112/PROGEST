@@ -61,7 +61,7 @@
 
             <!-- Botón de volver -->
             <div class="flex justify-center pt-6">
-                <a href=""
+                <a href="{{ route(Auth::user()->getRoleNames()->first() . '.dashboard') }}"
                     class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition">
                     ← Volver al panel principal
                 </a>
