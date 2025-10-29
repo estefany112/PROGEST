@@ -37,7 +37,7 @@ class OrdenCompraController extends Controller
      */
     public function create($cotizacionId = null)
     {
-        $cotizaciones = Cotizacion::where('estado', 'aprobada')->get();
+        $cotizaciones = Cotizacion::where('estado', 'aprobado')->get();
         $cotizacion = $cotizacionId ? Cotizacion::findOrFail($cotizacionId) : null;
 
         return view('ordenes_compra.create', compact('cotizaciones', 'cotizacion'));

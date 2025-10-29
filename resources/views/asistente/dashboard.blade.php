@@ -174,7 +174,7 @@
         <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
             <h3 class="text-xl font-semibold text-white mb-2">Facturas</h3>
             <p class="text-gray-400 mb-4">Sube facturas externas emitidas por clientes.</p>
-            <a href="{{ route('facturas.create') }}" class="text-green-400 hover:text-green-300 font-medium">Subir factura →</a> </br>
+            <a href="{{ route('facturas.create') }}" class="text-green-400 hover:text-green-300 font-medium">Registrar referencia de factura →</a> </br>
             <a href="{{ route('facturas.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver facturas →</a>
         </div>
 
@@ -182,6 +182,7 @@
         <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
             <h3 class="text-xl font-semibold text-white mb-2">Contraseñas de Pago</h3>
             <p class="text-gray-400 mb-4">Consulta o genera contraseñas de autorización.</p>
+            <a href="{{ route('contrasenas.create') }}" class="text-green-400 hover:text-green-300 font-medium">Registrar Contraseña de Pago →</a> </br>
             <a href="{{ route('contrasenas.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver contraseñas →</a>
         </div>
 
@@ -189,7 +190,8 @@
         <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow hover:shadow-xl transition">
             <h3 class="text-xl font-semibold text-white mb-2">Pagos</h3>
             <p class="text-gray-400 mb-4">Registra y verifica pagos realizados.</p>
-            <a href="{{ route('pagos.index') }}" class="text-green-400 hover:text-green-300 font-medium">Ver pagos →</a>
+            <a href="{{ route('pagos.create') }}" class="text-green-400 hover:text-green-300 font-medium">Registrar pago →</a> </br>
+            <a href="{{ route('pagos.index') }}" class="text-blue-400 hover:text-blue-300 font-medium">Ver pagos →</a>
         </div>
 
     </div>
