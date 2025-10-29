@@ -49,10 +49,10 @@ class CotizacionPolicy
         if ($user->tipo === 'admin') {
             return true;
         }
-        // Solo el asistente que creó la cotización puede editarla si está en borrador
-        return $user->tipo === 'asistente' && 
-               $cotizacion->creada_por === $user->id && 
-               in_array($cotizacion->estado, ['borrador', 'en_revision']);
+        // si la cotización está en borrador o fue rechazada
+        return $user->tipo === 'asistente'
+            && $cotizacion->creada_por === $user->id
+            && in_array($cotizacion->estado, ['borrador', 'rechazada']);
     }
 
     /**
@@ -64,10 +64,10 @@ class CotizacionPolicy
         if ($user->tipo === 'admin') {
             return true;
         }
-        // Solo el asistente que creó la cotización puede eliminarla si está en borrador
-        return $user->tipo === 'asistente' && 
-               $cotizacion->creada_por === $user->id && 
-               $cotizacion->estado === 'borrador';
+        // Solo el asistente que creó la cotización puede eliminarla si está en borrador y rechazada
+        return $user->tipo === 'asistente'
+            && $cotizacion->creada_por === $user->id
+            && in_array($cotizacion->estado, ['borrador', 'rechazada']);
     }
 
     /**

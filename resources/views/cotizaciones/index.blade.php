@@ -121,8 +121,6 @@
 
                                                 <a href="{{ route('cotizaciones.show', $cotizacion) }}" 
                                                    class="bg-gray-600 hover:bg-gray-800 text-white font-bold py-1 px-3 rounded text-xs">Ver</a>
-
-                                                @role('admin')
                                                     <form action="{{ route('cotizaciones.destroy', $cotizacion) }}" 
                                                           method="POST" 
                                                           onsubmit="return confirm('¿Seguro que deseas eliminar esta cotización?');">
@@ -132,7 +130,6 @@
                                                             Eliminar
                                                         </button>
                                                     </form>
-                                                @endrole
                                             </div>
                                         </td>
 

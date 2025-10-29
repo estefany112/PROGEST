@@ -138,7 +138,7 @@
                                                    class="bg-gray-600 hover:bg-gray-800 text-white font-bold py-1 px-3 rounded text-xs">Ver</a>
 
                                                 <a href="{{ route('ordenes-compra.edit', $orden) }}" 
-                                                   class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-1 px-3 rounded text-xs">Editar</a>
+                                                   class="bg-yellow-600 hover:bg-yellow-800 text-white font-bold py-1 px-3 rounded text-xs">Editar</a>
 
                                                 @role('admin')
                                                     <form action="{{ route('ordenes-compra.destroy', $orden) }}" 
