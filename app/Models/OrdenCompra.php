@@ -28,7 +28,7 @@ class OrdenCompra extends Model
         'revisado_por',
     ];
 
-    // 👇 Relación con Cotizacion (cada orden pertenece a una cotización)
+    // Relación con Cotizacion (cada orden pertenece a una cotización)
     public function cotizacion()
     {
         return $this->belongsTo(Cotizacion::class, 'cotizacion_id');

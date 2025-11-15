@@ -22,7 +22,7 @@ class CotizacionController extends Controller
         $user = Auth::user();
         $query = Cotizacion::query()->with('creadaPor');
         
-        // 🔹 Admin ve todas, asistente solo las suyas
+        // Admin ve todas, asistente solo las suyas
         if ($user->tipo === 'asistente') {
             $query->where('creada_por', $user->id);
         } elseif ($user->tipo === 'admin') {
@@ -30,7 +30,7 @@ class CotizacionController extends Controller
         $query->where('estado', '!=', 'borrador');
 }
 
-        // 🔹 Si el filtro de estado está activo
+        // Si el filtro de estado está activo
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
@@ -347,7 +347,7 @@ class CotizacionController extends Controller
     $user = Auth::user();
     $nuevoEstado = $request->estado;
 
-    // 🔹 Validar según rol con Spatie
+    // Validar según rol con Spatie
     if ($user->hasRole('asistente') && !in_array($nuevoEstado, ['borrador', 'en_revision'])) {
         return back()->with('error', 'Como asistente solo puedes cambiar a Borrador o En Revisión.');
     }
@@ -365,18 +365,18 @@ class CotizacionController extends Controller
 
     $cotizacion->estado = $nuevoEstado;
 
-    // 🔹 Si se rechaza, guardar comentario (si viene)
+    // Si se rechaza, guardar comentario (si viene)
     if ($nuevoEstado === 'rechazada') {
         $cotizacion->comentario_rechazo = $request->comentario_rechazo ?? null;
         $cotizacion->revisada_por = $user->id;
     }
 
-    // 🔹 Si se aprueba
+    // Si se aprueba
     if ($nuevoEstado === 'aprobada') {
         $cotizacion->revisada_por = $user->id;
     }
 
-    // 🔹 Si vuelve a borrador/en_revision
+    // Si vuelve a borrador/en_revision
     if (in_array($nuevoEstado, ['borrador', 'en_revision'])) {
         $cotizacion->revisada_por = null;
         $cotizacion->comentario_rechazo = null;
