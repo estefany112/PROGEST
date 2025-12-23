@@ -65,11 +65,21 @@
             <td class="px-4 py-3">{{ $u->email }}</td>
             <td class="px-4 py-3">
               @if($u->id === 1)
-                  <span class="text-gray-400 italic">Admin (Protegido)</span>
+                  <span class="text-gray-400 bold italic">Admin (Protegido)</span>
               @else
-                  <span class="px-2 py-1 text-xs rounded bg-purple-900">
-                      {{ ucfirst($u->tipo ?? 'Sin rol') }}
-                  </span>
+                @php
+                    $rol = $u->getRoleNames()->first();
+
+                    $color = match ($rol) {
+                        'admin' => 'bg-green-700 text-white',
+                        'asistente' => 'bg-purple-900 text-white',
+                        default => 'bg-gray-300 text-gray-700',
+                    };
+                @endphp
+
+                <span class="px-2 py-1 text-xs rounded {{ $color }}">
+                    {{ ucfirst($rol ?? 'Sin rol') }}
+                </span>
               @endif
             </td>
             <td class="px-4 py-3">

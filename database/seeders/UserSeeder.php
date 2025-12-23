@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
                 'estado' => 'activo',
             ]
         );
-        $admin->assignRole($adminRole);
+        $admin->syncRoles($adminRole);
 
         // Usuario Asistente
         $asistente = User::updateOrCreate(
@@ -35,6 +35,6 @@ class UserSeeder extends Seeder
                 'estado' => 'activo',
             ]
         );
-        $asistente->assignRole($asistenteRole);
+        $asistente->syncRoles($asistenteRole);
     }
 }
