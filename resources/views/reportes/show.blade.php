@@ -1,82 +1,99 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto py-10 px-6">
-    <h1 class="text-2xl font-bold text-white mb-6">Detalle del Reporte de Trabajo</h1>
+<div class="max-w-7xl mx-auto pt-8 pb-10 px-6">
+    <h1 class="text-2xl font-bold text-gray-100 mb-6">
+        Detalle del Reporte de Trabajo
+    </h1>
 
-    <div class="bg-gray-900 p-6 rounded-lg shadow space-y-4 border border-gray-800">
-        <!-- Orden y fecha -->
-        <p><strong class="text-gray-300">Orden de Compra:</strong> 
-            <span class="text-gray-100">{{ $reporte->ordenCompra->numero_oc ?? 'N/A' }}</span>
-        </p>
+    <!-- Información del Reporte -->
+    <div class="bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg mb-6 border border-gray-800">
+        <div class="p-6">
+            <h3 class="text-lg font-medium text-blue-100 mb-4">Información del Reporte</h3>
 
-        <p><strong class="text-gray-300">Fecha de Registro:</strong> 
-            <span class="text-gray-100">{{ $reporte->created_at->format('d/m/Y H:i') }}</span>
-        </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <p class="text-sm font-medium text-gray-400">Orden de Compra</p>
+                    <p class="text-lg text-gray-100">{{ $reporte->ordenCompra->numero_oc ?? 'N/A' }}</p>
+                </div>
 
-        <!-- Estado -->
-        <p><strong class="text-gray-300">Estado:</strong>
-            <span class="@switch($reporte->status)
-                            @case('borrador') text-gray-400 @break
-                            @case('revision') text-yellow-400 @break
-                            @case('aprobado') text-green-400 @break
-                            @case('rechazado') text-red-400 @break
-                        @endswitch font-semibold">
-                {{ ucfirst($reporte->status) }}
-            </span>
-        </p>
+                <div>
+                    <p class="text-sm font-medium text-gray-400">Fecha de Registro</p>
+                    <p class="text-lg text-gray-100">{{ $reporte->created_at->format('d/m/Y H:i') }}</p>
+                </div>
 
-        <!-- Creado por -->
-        <p><strong class="text-gray-300">Creado por:</strong>
-            <span class="text-gray-100">{{ $reporte->creadaPor->name ?? 'N/A' }}</span>
-        </p>
+                <div>
+                    <p class="text-sm font-medium text-gray-400">Creado por</p>
+                    <p class="text-lg text-gray-100">{{ $reporte->creadaPor->name ?? 'N/A' }}</p>
+                </div>
 
-        <!-- Revisado por (solo si existe) -->
-        @if($reporte->revisadoPor)
-            <p><strong class="text-gray-300">Revisado por:</strong>
-                <span class="text-gray-100">{{ $reporte->revisadoPor->name }}</span>
-            </p>
-        @endif
-
-        <!-- Archivo -->
-        @if($reporte->archivo)
-            <div class="mt-4">
-                <p class="mb-2"><strong class="text-gray-300">Archivo adjunto:</strong></p>
-
-                @php
-                    $extension = pathinfo($reporte->archivo, PATHINFO_EXTENSION);
-                @endphp
-
-                @if(in_array(strtolower($extension), ['jpg','jpeg','png','gif','webp']))
-                    <img src="{{ Storage::url($reporte->archivo) }}" 
-                         alt="Vista previa" 
-                         class="max-w-full h-auto rounded border border-gray-700">
-                
-                @elseif(strtolower($extension) === 'pdf')
-                    <iframe src="{{ Storage::url($reporte->archivo) }}" 
-                            class="w-full h-96 border border-gray-700 rounded"
-                            frameborder="0"></iframe>
-                @else
-                    <p class="text-gray-400">El archivo no se puede previsualizar.</p>
+                @if($reporte->revisadoPor)
+                <div>
+                    <p class="text-sm font-medium text-gray-400">Revisado por</p>
+                    <p class="text-lg text-gray-100">{{ $reporte->revisadoPor->name }}</p>
+                </div>
                 @endif
 
-                <div class="mt-4">
-                    <a href="{{ Storage::url($reporte->archivo) }}" 
-                       target="_blank"
-                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                       Abrir / Descargar
-                    </a>
+                <!-- ESTADO con colores -->
+                <div>
+                    <p class="text-sm font-medium text-gray-400">Estado actual</p>
+                    @php
+                        use Illuminate\Support\Str;
+
+                        $estadoNormalizado = Str::of($reporte->status)->lower()->ascii()->replace(' ', '_')->__toString();
+
+                        $estadoColors = [
+                            'borrador' => 'bg-gray-600',
+                            'revision' => 'bg-yellow-600',
+                            'aprobado' => 'bg-green-600',
+                            'rechazado' => 'bg-red-600',
+                        ];
+
+                        $estadoLabels = [
+                            'borrador' => 'Borrador',
+                            'revision' => 'En revisión',
+                            'aprobado' => 'Aprobado',
+                            'rechazado' => 'Rechazado',
+                        ];
+                    @endphp
+
+                    <span class="px-3 py-1 rounded text-white text-sm font-semibold {{ $estadoColors[$estadoNormalizado] ?? 'bg-gray-700' }}">
+                        {{ $estadoLabels[$estadoNormalizado] ?? ucfirst($reporte->status) }}
+                    </span>
+                </div>
+
+                <!-- Archivo adjunto -->
+                <div class="md:col-span-2">
+                    <p class="text-sm font-medium text-gray-400">Archivo adjunto</p>
+                    @if($reporte->archivo)
+                        @php $extension = pathinfo($reporte->archivo, PATHINFO_EXTENSION); @endphp
+
+                        @if(in_array(strtolower($extension), ['jpg','jpeg','png','gif','webp']))
+                            <img src="{{ Storage::url($reporte->archivo) }}" 
+                                 alt="Vista previa" 
+                                 class="max-w-full h-auto rounded border border-gray-700 mb-4">
+                        
+                        @elseif(strtolower($extension) === 'pdf')
+                            <iframe src="{{ Storage::url($reporte->archivo) }}" 
+                                    class="w-full h-96 border border-gray-700 rounded mb-4"
+                                    frameborder="0"></iframe>
+                        @else
+                            <p class="text-gray-300">El archivo no se puede previsualizar.</p>
+                        @endif
+
+                    @else
+                        <p class="text-gray-300">No se adjuntó archivo en este reporte.</p>
+                    @endif
                 </div>
             </div>
-        @else
-            <p class="text-gray-400">No se adjuntó archivo en este reporte.</p>
-        @endif
+        </div>
     </div>
 
-    <div class="mt-6">
+    <!-- Botón volver -->
+    <div class="flex justify-start mt-6">
         <a href="{{ route('reportes-trabajo.index') }}" 
-           class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded">
-           Volver
+           class="inline-block px-6 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">
+           ← Volver a Reportes
         </a>
     </div>
 </div>
