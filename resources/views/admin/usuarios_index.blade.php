@@ -3,6 +3,34 @@
 @section('content')
 <div class="max-w-7xl mx-auto py-8 px-6">
   <div class="flex items-center justify-between mb-6">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+  <script>
+  Swal.fire({
+    icon: 'success',
+    title: '¡Éxito!',
+    text: @json(session('success')),
+    timer: 1800,
+    showConfirmButton: false,
+    background: '#111827',
+    color: '#e5e7eb'
+  });
+</script>
+@endif
+
+@if(session('error'))
+  <script>
+  Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: @json(session('error')),
+    background: '#111827',
+    color: '#e5e7eb'
+  });
+  </script>
+@endif
+
     <h1 class="text-2xl font-bold text-white">Usuarios</h1>
   </div>
 
@@ -32,17 +60,6 @@
 
     <button type="submit" class="bg-blue-600 px-4 py-2 text-white rounded">Filtrar</button>
   </form>
-
-  @if(session('success'))
-    <div class="mb-4 text-sm text-green-300 bg-green-900/30 border border-green-700 px-3 py-2 rounded">
-      {{ session('success') }}
-    </div>
-  @endif
-  @if(session('error'))
-    <div class="mb-4 text-sm text-red-300 bg-red-900/30 border border-red-700 px-3 py-2 rounded">
-      {{ session('error') }}
-    </div>
-  @endif
 
   <div class="bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
     <table class="min-w-full divide-y divide-gray-700">
@@ -89,10 +106,18 @@
               <div class="flex justify-end gap-2">
                 @if($u->id !== 1) 
                   <a href="{{ route('usuarios.edit',$u->id) }}" class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded">Editar</a>
-                  <form action="{{ route('usuarios.destroy',$u->id) }}" method="POST" onsubmit="return confirm('¿Eliminar este usuario?');">
-                    @csrf @method('DELETE')
-                    <button class="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 text-white rounded">Eliminar</button>
-                  </form>
+                  <form id="form-delete-{{ $u->id }}" 
+                      action="{{ route('usuarios.destroy', $u->id) }}" 
+                      method="POST">
+                  @csrf
+                  @method('DELETE')
+                  <button type="button"
+                          onclick="confirmarEliminacion({{ $u->id }}, '{{ $u->name }}')"
+                          class="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 text-white rounded">
+                    Eliminar
+                  </button>
+                </form>
+                
                 @else
                   <span class="text-gray-400 italic">Protegido</span>
                 @endif
@@ -108,4 +133,27 @@
 
   <div class="mt-4">{{ $usuarios->links() }}</div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function confirmarEliminacion(id, nombre) {
+    Swal.fire({
+      title: '¿Eliminar cliente?',
+      html: `<p>El cliente <strong>${nombre}</strong> será eliminado permanentemente.</p>`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e3342f',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: '#111827',
+      color: '#e5e7eb',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById(`form-delete-${id}`).submit();
+      }
+    });
+  }
+</script>
+
 @endsection
