@@ -164,7 +164,6 @@
 
                                             <button type="button"
                                                     onclick="confirmarEliminacion({{ $factura->id }}, '{{ $factura->numero_factura ?? 'F-' . $factura->id }}')"
-
                                                     class="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded text-xs">
                                                 Eliminar
                                             </button>
