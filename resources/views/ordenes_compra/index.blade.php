@@ -16,15 +16,31 @@
 
     <div class="pt-2 pb-10">
         {{-- Mensajes flash --}}
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         @if(session('success'))
-            <div id="alert-message" class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded mb-4 duration-500">
-                {{ session('success') }}
-            </div>
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: @json(session('success')),
+            timer: 1800,
+            showConfirmButton: false,
+            background: '#111827',
+            color: '#e5e7eb'
+        });
+        </script>
         @endif
+
         @if(session('error'))
-            <div id="alert-message" class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4 duration-500">
-                {{ session('error') }}
-            </div>
+        <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: @json(session('error')),
+            background: '#111827',
+            color: '#e5e7eb'
+        });
+        </script>
         @endif
 
         <!-- Filtros por Estado -->
@@ -141,16 +157,19 @@
                                                    class="bg-yellow-600 hover:bg-yellow-800 text-white font-bold py-1 px-3 rounded text-xs">Editar</a>
 
                                                 @role('admin')
-                                                    <form action="{{ route('ordenes-compra.destroy', $orden) }}" 
-                                                          method="POST" 
-                                                          onsubmit="return confirm('¿Seguro que deseas eliminar esta orden?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded text-xs">
-                                                            Eliminar
-                                                        </button>
-                                                    </form>
-                                                @endrole
+                                                <form id="form-delete-{{ $orden->id }}" 
+                                                    action="{{ route('ordenes-compra.destroy', $orden) }}" 
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button type="button"
+                                                            onclick="confirmarEliminacion({{ $orden->id }}, '{{ $orden->numero_oc }}')"
+                                                            class="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded text-xs">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            @endrole
                                             </div>
                                         </td>
 
@@ -202,4 +221,27 @@
         }
     });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function confirmarEliminacion(id, orden) {
+    Swal.fire({
+      title: '¿Eliminar orden de compra?',
+      html: `<p>La orden de compra <strong>${orden}</strong> será eliminada permanentemente.</p>`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e3342f',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: '#111827',
+      color: '#e5e7eb',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById(`form-delete-${id}`).submit();
+      }
+    });
+  }
+</script>
+
 @endsection
