@@ -15,15 +15,32 @@
     </div>
 
     {{-- Mensajes Flash --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @if(session('success'))
-        <div id="alert-message" class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded mb-4 duration-500">
-            {{ session('success') }}
-        </div>
+    <script>
+    Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: @json(session('success')),
+        timer: 1800,
+        showConfirmButton: false,
+        background: '#111827',
+        color: '#e5e7eb'
+    });
+    </script>
     @endif
+
     @if(session('error'))
-        <div id="alert-message" class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4 duration-500">
-            {{ session('error') }}
-        </div>
+    <script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: @json(session('error')),
+        background: '#111827',
+        color: '#e5e7eb'
+    });
+    </script>
     @endif
 
     {{-- Filtro por estado --}}
@@ -138,14 +155,20 @@
                                         <a href="{{ route('facturas.edit', $factura) }}" 
                                            class="bg-yellow-600 hover:bg-yellow-800 text-white font-bold py-1 px-3 rounded text-xs">Editar</a>
 
-                                        @role('admin')
-                                            <form action="{{ route('facturas.destroy', $factura) }}" method="POST" onsubmit="return confirm('¿Eliminar esta factura?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded text-xs">
-                                                    Eliminar
-                                                </button>
-                                            </form>
+                                         @role('admin')
+                                        <form id="form-delete-{{ $factura->id }}" 
+                                            action="{{ route('facturas.destroy', $factura) }}" 
+                                            method="POST">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="button"
+                                                    onclick="confirmarEliminacion({{ $factura->id }}, '{{ $factura->numero_factura ?? 'F-' . $factura->id }}')"
+
+                                                    class="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded text-xs">
+                                                Eliminar
+                                            </button>
+                                        </form>
                                         @endrole
                                     </div>
                                 </td>
@@ -194,4 +217,27 @@
         }
     });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function confirmarEliminacion(id, numero_factura) {
+    Swal.fire({
+      title: '¿Eliminar factura?',
+      html: `<p>La factura <strong>${numero_factura}</strong> será eliminado permanentemente.</p>`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e3342f',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: '#111827',
+      color: '#e5e7eb',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById(`form-delete-${id}`).submit();
+      }
+    });
+  }
+</script>
+
 @endsection

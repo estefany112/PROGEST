@@ -224,10 +224,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  function confirmarEliminacion(id, nombre) {
+  function confirmarEliminacion(id, reporte_codigo) {
     Swal.fire({
-      title: '¿Eliminar cliente?',
-      html: `<p>El cliente <strong>${nombre}</strong> será eliminado permanentemente.</p>`,
+      title: '¿Eliminar reporte?',
+      html: `<p>El reporte <strong>${reporte_codigo}</strong> será eliminado permanentemente.</p>`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#e3342f',
