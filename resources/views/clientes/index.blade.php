@@ -3,16 +3,33 @@
 @section('content')
 <div class="max-w-7xl mx-auto pt-8 pb-10 px-6">
 
-  @if(session('success'))
-    <div class="mb-4 bg-green-900/40 border border-green-700 text-green-300 px-4 py-2 rounded">
-      {{ session('success') }}
-    </div>
-  @endif
-  @if(session('error'))
-    <div class="mb-4 bg-red-900/40 border border-red-700 text-red-300 px-4 py-2 rounded">
-      {{ session('error') }}
-    </div>
-  @endif
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+  <script>
+  Swal.fire({
+    icon: 'success',
+    title: '¡Éxito!',
+    text: @json(session('success')),
+    timer: 1800,
+    showConfirmButton: false,
+    background: '#111827',
+    color: '#e5e7eb'
+  });
+</script>
+@endif
+
+@if(session('error'))
+  <script>
+  Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: @json(session('error')),
+    background: '#111827',
+    color: '#e5e7eb'
+  });
+  </script>
+@endif
 
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-100">Clientes</h1>
@@ -50,17 +67,30 @@
             <td class="px-4 py-3 text-gray-100">{{ $c->direccion }}</td>
             <td class="px-4 py-3">
               <div class="flex justify-end gap-2">
-                <a href="{{ route('clientes.show', $c) }}" class="px-3 py-1 text-sm border border-gray-700 text-gray-300 rounded hover:bg-gray-800">Ver</a>
-                <a href="{{ route('clientes.edit', $c) }}" class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded">Editar</a>
-                <form action="{{ route('clientes.destroy', $c) }}" method="POST" onsubmit="return confirm('¿Eliminar cliente?');">
-                  @csrf @method('DELETE')
-                  <button class="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 text-white rounded">Eliminar</button>
+                <a href="{{ route('clientes.show', $c) }}" 
+                  class="px-3 py-1 text-sm border border-gray-700 text-gray-300 rounded hover:bg-gray-800">Ver</a>
+                
+                <a href="{{ route('clientes.edit', $c) }}" 
+                  class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded">Editar</a>
+
+                <button type="button"
+                        onclick="confirmarEliminacion({{ $c->id }}, '{{ $c->nombre }}')"
+                        class="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 text-white rounded">
+                  Eliminar
+                </button>
+
+                <form id="form-delete-{{ $c->id }}" 
+                  action="{{ route('clientes.destroy', $c->id) }}" 
+                  method="POST" class="hidden">
+              @csrf
+              @method('DELETE')
                 </form>
               </div>
             </td>
-          </tr>
-        @empty
-          <tr>
+
+            </tr>
+            @empty
+            <tr>
             <td class="px-4 py-6 text-center text-gray-400" colspan="4">No hay clientes.</td>
           </tr>
         @endforelse
@@ -72,4 +102,27 @@
     {{ $clientes->links() }}
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function confirmarEliminacion(id, nombre) {
+    Swal.fire({
+      title: '¿Eliminar cliente?',
+      html: `<p>El cliente <strong>${nombre}</strong> será eliminado permanentemente.</p>`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e3342f',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: '#111827',
+      color: '#e5e7eb',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById(`form-delete-${id}`).submit();
+      }
+    });
+  }
+</script>
+
 @endsection
