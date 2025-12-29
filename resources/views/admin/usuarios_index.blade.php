@@ -138,8 +138,8 @@
 <script>
   function confirmarEliminacion(id, nombre) {
     Swal.fire({
-      title: '¿Eliminar cliente?',
-      html: `<p>El cliente <strong>${nombre}</strong> será eliminado permanentemente.</p>`,
+      title: '¿Eliminar usuario?',
+      html: `<p>El usuario <strong>${nombre}</strong> será eliminado permanentemente.</p>`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#e3342f',
