@@ -15,15 +15,32 @@
     </div>
 
     {{-- Mensajes flash --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @if(session('success'))
-        <div id="alert-message" class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
+    <script>
+    Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: @json(session('success')),
+        timer: 1800,
+        showConfirmButton: false,
+        background: '#111827',
+        color: '#e5e7eb'
+    });
+    </script>
     @endif
+
     @if(session('error'))
-        <div id="alert-message" class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
-            {{ session('error') }}
-        </div>
+    <script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: @json(session('error')),
+        background: '#111827',
+        color: '#e5e7eb'
+    });
+    </script>
     @endif
 
     {{-- Filtro por estado --}}
@@ -68,6 +85,7 @@
                 <table class="min-w-full bg-gray-900 rounded-lg">
                     <thead class="bg-gray-800">
                         <tr>
+                            <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Código</th>
                             <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Fecha Documento</th>
                             <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Cliente</th>
                             <th class="px-6 py-3 text-left text-sm text-gray-300 uppercase">Factura</th>
@@ -86,6 +104,11 @@
                     <tbody class="bg-gray-900 divide-y divide-gray-800">
                         @forelse($contrasenas as $contrasena)
                             <tr class="hover:bg-gray-800 transition">
+                                
+                                <td class="px-6 py-4 text-white">
+                                    {{ $contrasena->codigo ?? 'N/A' }}
+                                </td>
+
                                 <td class="px-6 py-4 text-white">
                                     {{ $contrasena->fecha_documento ? \Carbon\Carbon::parse($contrasena->fecha_documento)->format('d/m/Y') : 'N/A' }}
                                 </td>
@@ -154,15 +177,18 @@
 
                                         {{-- Eliminar --}}
                                         @role('admin')
-                                            <form action="{{ route('contrasenas.destroy', $contrasena) }}" 
-                                                  method="POST" 
-                                                  onsubmit="return confirm('¿Seguro que deseas eliminar esta contraseña?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded text-xs">
-                                                    Eliminar
-                                                </button>
-                                            </form>
+                                        <form id="form-delete-{{ $contrasena->id }}" 
+                                            action="{{ route('contrasenas.destroy', $contrasena) }}" 
+                                            method="POST">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="button"
+                                                    onclick="confirmarEliminacion({{ $contrasena->id }}, '{{ $contrasena->codigo ?? 'C-' . $contrasena->id }}')"
+                                                    class="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded text-xs">
+                                                Eliminar
+                                            </button>
+                                        </form>
                                         @endrole
                                     </div>
                                 </td>
@@ -213,4 +239,28 @@
         }
     });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function confirmarEliminacion(id, codigo) {
+    Swal.fire({
+      title: '¿Eliminar contraseña de pago?',
+      html: `<p>La contraseña de pago <strong>${codigo}</strong> será eliminada permanentemente.</p>`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e3342f',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: '#111827',
+      color: '#e5e7eb',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById(`form-delete-${id}`).submit();
+      }
+    });
+  }
+</script>
+
 @endsection
+
