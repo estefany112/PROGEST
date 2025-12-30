@@ -33,7 +33,19 @@
                         Recordarme
                     </label>
                     @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" class="text-gray-500 hover:underline">Olvidate tu contraseña?</a>
+                        <a href="#"
+                        onclick="Swal.fire({
+                            icon: 'info',
+                            title: 'Opción no disponible',
+                            text: 'La recuperación de contraseña está deshabilitada en esta versión de demostración.',
+                            background: '#111827',
+                            color: '#e5e7eb',
+                            confirmButtonText: 'Entendido',
+                            confirmButtonColor: '#3b82f6'
+                        })"
+                        class="text-sm text-blue-400 hover:underline">
+                        ¿Olvidaste tu contraseña?
+                        </a>
                     @endif
                 </div>
 
